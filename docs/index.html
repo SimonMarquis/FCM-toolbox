@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="https://github.com/SimonMarquis">
+  <link rel="shortcut icon" href="favicon.png">
+
+  <title>FCM toolbox</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+  <link href="fcm-toolbox.css" rel="stylesheet">
+  <script src="fcm-toolbox.js"></script>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header clearfix">
+      <nav class="navbar navbar-light bg-faded">
+        <a class="navbar-brand text-muted" href="">
+          <img src="favicon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+          FCM toolbox
+        </a>
+        <ul class="nav nav-pills float-xs-right">
+          <li class="nav-item">
+            <a class="nav-link" href="" data-toggle="modal" data-target="#tutorialModal"> <i class="fa fa-graduation-cap" aria-hidden="true"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/SimonMarquis/FCM-toolbox" target="_blank"> <i class="fa fa-github" aria-hidden="true"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" target="_blank"> <i class="fa fa-download" aria-hidden="true"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="" data-toggle="modal" data-target="#settings-modal"> <i class="fa fa-sliders" aria-hidden="true"></i></a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="settings-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="settings-modal-label">Settings</h5>
+          </div>
+          <div class="modal-body">
+            <form>
+              <h5>Firebase Cloud Messaging <small class="text-muted">(Required)</small></h5>
+              <p></p>
+              <div class="form-group row">
+                <label for="form-api-key" class="col-xs-2 col-form-label">API Key</label>
+                <div class="col-xs-10">
+                  <input class="form-control" type="text" value="" id="settings-fcm-api-key" required="true">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="form-input-ttl" class="col-xs-2 col-form-label">Ttl</label>
+                <div class="col-xs-10">
+                  <input class="form-control" type="number" value="" id="settings-fcm-ttl">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="form-input-priority" class="col-xs-2 col-form-label">Priority</label>
+                <div class="col-xs-10">
+                  <select class="form-control" id="settings-fcm-priority">
+                    <option value="high">High</option>
+                    <option value="normal">Normal</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              <h5>Firebase Realtime Database <small class="text-muted">(Optional)</small></h5>
+              <p></p>
+              <div class="form-group row">
+                <label for="form-api-key" class="col-xs-2 col-form-label">Url</label>
+                <div class="col-xs-10">
+                  <input class="form-control" type="text" value="" id="settings-frd-database-url" required>
+                  <small id="emailHelp" class="form-text text-muted">Modification requires a page reload</small>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="btn-reset">Reset</button>
+            <button type="button" class="btn btn-warning" onclick="location.reload();">Reload</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="tutorialModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title">Tutorial</h5>
+          </div>
+          <div class="modal-body">
+            <h6>How to send push payloads?</h6>
+            <ol>
+              <li>Select a <strong>type</strong> of payload to send</li>
+              <li>Fill the corresponding <strong>input fields</strong></li>
+              <li>Enter an device <strong>token</strong> or a <strong>topic</strong></li>
+              <li>Click the <button type="button" class="btn btn-sm btn-primary">Push <i class="fa fa-paper-plane-o" aria-hidden="true"></i></button> button or <kbd>Ctrl</kbd> + <kbd>&#9166;</kbd></li>
+            </ol>
+            <hr class="my-1">
+            <h6>How to add device tokens?</h6>
+            <ol>
+              <li>Fill the <strong>token</strong> input field</li>
+              <li>Click the <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button> button</li>
+            </ol>
+            Or
+            <ol>
+              <li><strong>Download</strong> and <strong>launch</strong> the corresponding app on your device</li>
+              <li>Open the <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"><i class="fa fa-search" aria-hidden="true"></i></button> dropdown</li>
+              <li>Click the <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button> button next to the corresponding device</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card text-xs-left">
+      <div class="card-header">
+        <ul id="payload-type" class="nav nav-tabs card-header-tabs float-xs-left" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#send-ping" role="tab"><i class="fa fa-bell-o" aria-hidden="true"></i> Ping</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#send-text" role="tab"><i class="fa fa-commenting-o" aria-hidden="true"></i> Text</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#send-link" role="tab"><i class="fa fa-link" aria-hidden="true"></i> Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#send-app" role="tab"><i class="fa fa-android" aria-hidden="true"></i> App</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#send-raw" role="tab"><i class="fa fa-code" aria-hidden="true"></i> Raw</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tab-content">
+        <div class="card-block tab-pane active fade in" id="send-ping" role="tabpanel">
+          <p class="card-text">Test the reachability of a device</p>
+        </div>
+
+        <div class="card-block tab-pane fade in" id="send-text" role="tabpanel">
+          <div class="form-group row">
+            <label for="send-text-title" class="col-xs-2 col-form-label">Title</label>
+            <div class="col-xs-10">
+              <input class="form-control" type="text" value="" id="send-text-title" placeholder="Title">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="send-text-message" class="col-xs-2 col-form-label">Message</label>
+            <div class="col-xs-10">
+              <div class="input-group">
+                <input class="form-control" type="text" value="" id="send-text-message" placeholder="Message">
+                <span class="input-group-addon"><label style="margin-bottom:0px;"><input type="checkbox" aria-label="" id="send-text-clipboard"> Clipboard</label></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-block tab-pane fade in" id="send-link" role="tabpanel">
+          <div class="form-group row">
+            <label for="send-link-title" class="col-xs-2 col-form-label">Title</label>
+            <div class="col-xs-10">
+              <input class="form-control" type="text" value="" id="send-link-title" placeholder="Title">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="send-link-url" class="col-xs-2 col-form-label">URL</label>
+            <div class="col-xs-10">
+              <div class="input-group">
+                <input class="form-control" type="url" value="" id="send-link-url" placeholder="https://www.google.com">
+                <span class="input-group-addon"><label style="margin-bottom:0px;"><input type="checkbox" aria-label="" id="send-link-url-open"> Open</label></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-block tab-pane fade in" id="send-app" role="tabpanel">
+          <div class="form-group row">
+            <label for="send-app-title" class="col-xs-2 col-form-label">Title</label>
+            <div class="col-xs-10">
+              <input class="form-control" type="text" value="" id="send-app-title" placeholder="Title">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="send-app-package" class="col-xs-2 col-form-label">Package</label>
+            <div class="col-xs-10">
+              <input class="form-control" type="text" value="" id="send-app-package" placeholder="com.android.example">
+            </div>
+          </div>
+        </div>
+
+        <div class="card-block tab-pane fade in" id="send-raw" role="tabpanel">
+          <div class="form-group row">
+            <textarea class="form-control" rows="4" id="send-raw-data"></textarea>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-footer text-muted text-xs-right">
+
+        <div class="form-group row">
+          <label for="form-device-token" class="col-xs-2 col-form-label">Token</label>
+          <div class="col-xs-10">
+            <div class="input-group">
+              <input class="form-control" type="text" value="" id="form-device-token">
+              <span class="input-group-addon" id="btn-device-token-alias"></span>
+              <span class="input-group-btn">
+                  <button id="btn-add-device-token" type="button" class="btn btn-secondary"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                  <button id="btn-device-dropdown" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search" aria-hidden="true"></i> </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <h6 class="dropdown-header">Saved devices</h6>
+                    <div id="list-device-tokens" class="list-group list-group-flush">
+                    </div>
+                    <h6 class="dropdown-header">Connected devices</h6>
+                    <div id="list-device-users" class="list-group list-group-flush">
+                    </div>
+                  </div>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-send" type="button" class="btn btn-sm btn-primary">Push <i id="btn-send-icon-normal" class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+        <button id="btn-loading" type="button" class="btn btn-sm btn-primary" style="display: none;" disabled>&nbsp;&nbsp;&nbsp;&nbsp;<i id="btn-send-icon-loading" class="fa fa-spinner fa-pulse fa-fw"></i>&nbsp;&nbsp;&nbsp;&nbsp;</button>
+
+      </div>
+    </div>
+
+  </div> <!-- /container -->
+
+  <div id="alert-container" class="container" style="position:fixed;top:20px;right:20px;left:20px;z-index: 100;"></div>
+</body>
+</html>
