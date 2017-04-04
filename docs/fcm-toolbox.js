@@ -16,7 +16,11 @@ Storage.prototype.setObject = function(key, value) {
 
 Storage.prototype.getObject = function(key) {
   let value = this.getItem(key);
-  return value && JSON.parse(value);
+  try {
+    return value && JSON.parse(value);
+  } catch (e) {
+    return undefined;
+  }
 }
 
 function getSettings(settings) {
@@ -28,7 +32,7 @@ function setSettings(settings) {
 }
 
 function getDeviceTokens() {
-  return localStorage.getObject('device_tokens');
+  return localStorage.getObject('device_tokens') || [];
 }
 
 function setDeviceTokens(tokens) {
@@ -41,6 +45,14 @@ function getLastDeviceToken() {
 
 function setLastDeviceToken(token) {
   return localStorage.setObject('last_device_token', token);
+}
+
+function getFcmUsers() {
+  return localStorage.getObject('fcm_users') || [];
+}
+
+function setFcmUsers(users) {
+  localStorage.setObject('fcm_users', users)
 }
 
 function findDeviceToken() {
@@ -125,8 +137,6 @@ function bind() {
   })
   .val(JSON.stringify({key: 'value'}, undefined, 4))
   .change();
-
-  ;
   $('#form-device-token').bind('input change', function(){
     let element = $(this);
     let currentToken = element.val();
@@ -139,16 +149,11 @@ function bind() {
     aliasBtn.empty();
 
     let isConnectedUser = false;
-    let users = localStorage.getObject('fcm_users');
-    for (let user in users) {
-      let connections = users[user].connections;
-      for (let connection in connections) {
-        let data = connections[connection];
-        if (data.displayName && data.token === currentToken) {
-          isConnectedUser = true;
-        }
+    $.each(getFcmUsers(), function (index, user) {
+      if (user.value === currentToken) {
+        isConnectedUser = true;
       }
-    }
+    });
 
     $.each( [ element, aliasBtn, addBtn, dropdownBtn ], function( i, l ){
       if (isConnectedUser) {
@@ -163,13 +168,12 @@ function bind() {
       addBtn.prop('disabled', false);
       sendBtn.prop('disabled', false);
 
-      let tokens = getDeviceTokens() || [];
-      for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].value === currentToken) {
-          aliasBtn.text(tokens[i].label);
-          break;
+      $.each(getDeviceTokens(), function (index, token) {
+        if (token.value === currentToken) {
+          aliasBtn.text(token.label);
+          return false;
         }
-      }
+      });
     } else {
       element.parent().parent().parent().addClass("has-danger");
       addBtn.prop('disabled', true);
@@ -177,11 +181,11 @@ function bind() {
     }
 
     if (aliasBtn.text()) {
-        addBtn.hide();
-        aliasBtn.show();
+      addBtn.hide();
+      aliasBtn.show();
     } else {
-        aliasBtn.hide();
-        addBtn.show();
+      aliasBtn.hide();
+      addBtn.show();
     }
   });
 }
@@ -227,16 +231,29 @@ function initSettings() {
 }
 
 function initFirebase() {
-  localStorage.removeItem('fcm_users');
+  setFcmUsers(undefined);
   let settings = getSettings();
   if (!settings.frd.databaseUrl) return;
 
   let config = {databaseURL: settings.frd.databaseUrl};
   firebase.initializeApp(config);
-  let devices = firebase.database().ref('users');
+  let devices = firebase.database().ref('devices');
   devices.on('value', function(snapshot) {
     let users = snapshot.val();
-    localStorage.setObject('fcm_users', users);
+    var items = [];
+    $.each(snapshot.val() || [], function(key, user) {
+      if (user.token) {
+        items.push({
+          timestamp: user.timestamp,
+          label: user.name,
+          value: user.token
+        });
+      }
+    });
+    items.sort(function (a, b) {
+      return a.timestamp - b.timestamp;
+    });
+    setFcmUsers(items);
     displayConnectedDevices();
     findDeviceToken().change();
   });
@@ -249,37 +266,31 @@ function showDefaultDeviceToken() {
 function displayDeviceTokens() {
   let list = findDeviceTokenList();
   list.empty();
-  let tokens = getDeviceTokens();
-  if (!tokens) {
-    return;
-  }
-
-  for (let i = 0; i < tokens.length; i++) {
-    let token = tokens[i];
-    let trash = $('<i class="fa fa-trash">&nbsp;</i>');
+  $.each(getDeviceTokens(), function (index, token) {
+    let trash = $('<i class="fa fa-trash">&nbsp;&nbsp;</i>');
     trash.click(function(event) {
-      if (confirm("Delete device token?")) {
-        removeDeviceToken(token);
-        $('#form-device-token').change();
-      }
+      removeDeviceToken(token);
+      $('#form-device-token').change();
       event.preventDefault();
+      event.stopPropagation();
     });
     list.append(
-      $('<a href="#" class="list-group-item list-group-item-action"></a>')
+      $('<a href="#" class="dropdown-item dropdown-item-action"></a>')
       .attr('data-token', token.value)
       .text(token.label)
       .prepend(trash)
-    );
-  }
+      );
+  });
   bindDeviceTokens();
+  updateEmptyDeviceListHeader();
 }
 
 function bindDeviceTokens() {
-  findDeviceTokenList().find("a.list-group-item").click(function(event) {
+  findDeviceTokenList().find("a.dropdown-item-action").click(function(event) {
     findDeviceToken().val($(this).attr('data-token')).change();
     event.preventDefault();
   });
-  findDeviceUserList().find("a.list-group-item").click(function(event) {
+  findDeviceUserList().find("a.dropdown-item-action").click(function(event) {
     findDeviceToken().val($(this).attr('data-token')).change();
     event.preventDefault();
   });
@@ -288,87 +299,75 @@ function bindDeviceTokens() {
 
 function addDeviceToken(value, label) {
   if (value && label) {
-    let tokens = getDeviceTokens() || [];
+    let tokens = getDeviceTokens();
     let newToken = {
       value: value,
       label: label,
       timestamp: Date.now()
     };
     tokens.push(newToken);
+    tokens.sort(function (a, b) {
+      return a.timestamp - b.timestamp;
+    });
     setDeviceTokens(tokens);
     displayDeviceTokens();
   }
 }
 
 function removeDeviceToken(token) {
-  let tokens = getDeviceTokens() || [];
-  for (let i = 0; i < tokens.length; i++) {
-    if (tokens[i].timestamp === token.timestamp) {
-      tokens.splice(i, 1);
-      break;
-    }
-  }
-  setDeviceTokens(tokens);
+  let tokens = getDeviceTokens();
+  let grep = $.grep(tokens, function (t, index) {
+    return t.value !== token.value;
+  });
+  setDeviceTokens(grep);
   displayDeviceTokens();
 }
 
 function displayConnectedDevices() {
-  let users = localStorage.getObject('fcm_users');
+  let users = getFcmUsers();
   let list = findDeviceUserList();
   list.empty();
-  if (!users) {
-    return;
-  }
-  for (let user in users) {
-    let connections = users[user].connections;
-    if (connections) {
-      for (let connection in connections) {
-        let data = connections[connection];
-        if (data.displayName && data.token) {
-          let add = $('<i class="fa fa-plus">&nbsp;</i>');
-          add.click(function(event) {
-            addDeviceToken(data.token, data.displayName);
-            event.preventDefault();
-          });
-          list.append(
-            $('<a href="#" class="list-group-item list-group-item-action list-group-item-success"></a>')
-            .attr('data-token', data.token)
-            .text(data.displayName)
-            .prepend(add)
-          );
-        }
-      }
-    }
-  }
+  users.forEach(function (user, index) {
+    let add = $('<i class="fa fa-plus">&nbsp;&nbsp;</i>');
+    add.click(function(event) {
+      addDeviceToken(user.value, user.label);
+      $('#form-device-token').change();
+      event.preventDefault();
+      event.stopPropagation();
+    });
+    list.append(
+      $('<a href="#" class="dropdown-item dropdown-item-action text-success"></a>')
+      .attr('data-token', user.value)
+      .text(user.label)
+      .prepend(add)
+      );
+  });
   bindDeviceTokens();
+  updateEmptyDeviceListHeader();
 }
 
 function updateDevicesAndUsersStatus() {
   let tokens = findDeviceTokenList();
   let devices = findDeviceUserList();
-  let users = localStorage.getObject('fcm_users');
   // reset status
-  tokens.find("a.list-group-item").removeClass("list-group-item-success");
-  devices.find("a.list-group-item").show();
-  if (!users) {
-    return;
-  }
-  for (let user in users) {
-    let connections = users[user].connections;
-    if (connections) {
-      for (let connection in connections) {
-        let data = connections[connection];
-        if (data.displayName && data.token) {
-          let userListedAsToken = tokens.find("a.list-group-item[data-token='" + data.token + "']");
-          let userListedAsDevice = devices.find("a.list-group-item[data-token='" + data.token + "']");
-          if (userListedAsToken && userListedAsToken.length > 0) {
-            userListedAsToken.addClass("list-group-item-success");
-            userListedAsDevice.hide();
-            continue;
-          }
-        }
-      }
+  tokens.find("a.dropdown-item").removeClass("text-success");
+  devices.find("a.dropdown-item").show();
+
+  $.each(getFcmUsers(), function (index, user) {
+    let userListedAsToken = tokens.find("a.dropdown-item[data-token='" + user.value + "']");
+    let userListedAsDevice = devices.find("a.dropdown-item[data-token='" + user.value + "']");
+    if (userListedAsToken && userListedAsToken.length > 0) {
+      userListedAsToken.addClass("text-success");
+      userListedAsDevice.hide();
     }
+  });
+}
+
+function updateEmptyDeviceListHeader() {
+  if (findDeviceTokenList().children().length > 0 || findDeviceUserList().children().length > 0) {
+    $('#list-device-empty').hide();
+  } else {
+    $('#list-device-empty').show();
   }
 }
 

@@ -43,10 +43,6 @@ class PresenceEventListener implements ValueEventListener {
 
     private DatabaseReference presenceReference;
 
-    private DatabaseReference connectionsRef;
-
-    private DatabaseReference lastOnlineRef;
-
     private DatabaseReference connectionRef;
 
     private boolean isConnected = false;
@@ -56,20 +52,17 @@ class PresenceEventListener implements ValueEventListener {
         String uuid = Uuid.get(context);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         presenceReference = database.getReference(".info/connected");
-        // store each connection instance separately (multiple devices)
-        // any time that connectionsRef's value is null, I am offline
-        connectionsRef = database.getReference("users/" + uuid + "/connections");
-        // store the timestamp of my last disconnect (the last time I was seen online)
-        lastOnlineRef = database.getReference("/users/" + uuid + "/lastOnline");
+        connectionRef = database.getReference("devices/" + uuid);
     }
 
     static void updateConnectionReference(DatabaseReference connectionRef, String token) {
-        HashMap<String, Object> result = new HashMap<>();
+        HashMap<String, Object> result = new HashMap<>(3);
         Locale locale = Locale.getDefault();
         final String displayName = Build.MODEL.toLowerCase(locale).startsWith(Build.MANUFACTURER.toLowerCase(locale)) ? Build.MODEL
                 : Build.MANUFACTURER.toUpperCase(locale) + " " + Build.MODEL;
-        result.put("displayName", displayName);
+        result.put("name", displayName);
         result.put("token", token);
+        result.put("timestamp", ServerValue.TIMESTAMP);
         connectionRef.setValue(result);
     }
 
@@ -77,8 +70,6 @@ class PresenceEventListener implements ValueEventListener {
     public void onDataChange(DataSnapshot snapshot) {
         boolean connected = snapshot.getValue(Boolean.class);
         if (connected) {
-            // add this device to my connections list
-            connectionRef = connectionsRef.push();
             final String token = FirebaseInstanceId.getInstance().getToken();
             if (TextUtils.isEmpty(token)) {
                 new TokenFetcher(context, connectionRef).execute();
@@ -86,11 +77,9 @@ class PresenceEventListener implements ValueEventListener {
                 updateConnectionReference(connectionRef, token);
             }
             connectionRef.onDisconnect().removeValue();
-            lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
         }
         isConnected = connected;
         LocalBroadcastManager.getInstance(context).sendBroadcast(INTENT);
-
     }
 
     @Override
@@ -105,7 +94,6 @@ class PresenceEventListener implements ValueEventListener {
     void unregister() {
         presenceReference.removeEventListener(this);
         connectionRef.removeValue();
-        lastOnlineRef.setValue(ServerValue.TIMESTAMP);
         DatabaseReference.goOffline();
     }
 
