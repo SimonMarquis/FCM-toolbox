@@ -7,6 +7,8 @@ This public toolbox allows you to easily **test** and **debug** the [Firebase Cl
 
 **On the public toolbox versions, users share the same [FCM](https://firebase.google.com/docs/cloud-messaging/) and [FRD](https://firebase.google.com/docs/database/) instances, be responsible!**
 
+![demo](art/demo.gif)
+
 ## Android app
 
 Download the latest public version on the [Play Store](https://play.google.com/store/apps/details?id=fr.smarquis.fcm) or choose your [release version](https://github.com/SimonMarquis/FCM-toolbox/releases).
