@@ -420,10 +420,9 @@ function buildPayload() {
   let ttl = parseInt(settings.fcm.ttl);
   let priority = settings.fcm.priority;
 
-  //let payload = {"to" : token, "data" : {"ping" : "pong"}, ttl: ttl};
   let payload = {
-    "to": token,
-    ttl: ttl,
+    to: token,
+    time_to_live: ttl,
     priority: priority
   };
 
