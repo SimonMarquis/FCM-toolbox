@@ -61,7 +61,8 @@
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_text" />
+            app:layout_constraintTop_toBottomOf="@+id/item_text"
+            tools:ignore="RtlHardcoded" />
 
         <Button
             android:id="@+id/item_app_remove"
@@ -75,7 +76,8 @@
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/item_app_install"
-            app:layout_constraintTop_toBottomOf="@+id/item_text" />
+            app:layout_constraintTop_toBottomOf="@+id/item_text"
+            tools:ignore="RtlHardcoded" />
 
     </android.support.constraint.ConstraintLayout>
 

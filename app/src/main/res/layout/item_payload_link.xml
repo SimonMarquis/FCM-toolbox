@@ -32,7 +32,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
-            style="@style/ItemPayloadText"/>
+            style="@style/ItemPayloadText" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -61,7 +61,8 @@
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_text" />
+            app:layout_constraintTop_toBottomOf="@+id/item_text"
+            tools:ignore="RtlHardcoded" />
 
     </android.support.constraint.ConstraintLayout>
 
