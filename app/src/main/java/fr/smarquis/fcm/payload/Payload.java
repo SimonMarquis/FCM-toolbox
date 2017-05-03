@@ -205,7 +205,7 @@ public abstract class Payload implements Comparable<Payload> {
 
     @Override
     public int compareTo(@NonNull Payload payload) {
-        return (int) (payload.timestamp - timestamp);
+        return (payload.timestamp < timestamp) ? -1 : ((payload.timestamp == timestamp) ? 0 : 1);
     }
 
     public abstract CharSequence getFormattedCharSequence(Context context);
