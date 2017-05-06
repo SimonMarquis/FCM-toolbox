@@ -115,12 +115,12 @@
             <h5 class="modal-title">Tutorial</h5>
           </div>
           <div class="modal-body">
-            <h6>How to send push payloads?</h6>
+            <h6>How to send send payloads?</h6>
             <ol>
               <li>Select a <strong>type</strong> of payload to send</li>
               <li>Fill the corresponding <strong>input fields</strong></li>
               <li>Enter an device <strong>token</strong> or a <strong>topic</strong></li>
-              <li>Click the <button type="button" class="btn btn-sm btn-primary">Push <i class="fa fa-paper-plane-o" aria-hidden="true"></i></button> button or <kbd>Ctrl</kbd> + <kbd>&#9166;</kbd></li>
+              <li>Click the <button type="button" class="btn btn-sm btn-outline-primary"><b>Send</b></button> button or <kbd>Ctrl</kbd> + <kbd>&#9166;</kbd></li>
             </ol>
             <hr class="my-1">
             <h6>How to add device tokens?</h6>
@@ -246,8 +246,10 @@
           </div>
         </div>
 
-        <button id="btn-send" type="button" class="btn btn-sm btn-primary">Push <i id="btn-send-icon-normal" class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
-        <button id="btn-loading" type="button" class="btn btn-sm btn-primary" style="display: none;" disabled>&nbsp;&nbsp;&nbsp;&nbsp;<i id="btn-send-icon-loading" class="fa fa-spinner fa-pulse fa-fw"></i>&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        <div class="btn-group" role="group">
+          <button id="btn-visibility" type="button" class="btn btn-sm btn-outline-primary" title="Visibility"><i id="btn-visibility-icon" class="fa fa-eye" aria-hidden="true"></i></button>
+          <button id="btn-send" type="button" class="btn btn-sm btn-outline-primary"><b>Send</b></button>
+        </div>
 
       </div>
     </div>

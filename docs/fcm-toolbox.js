@@ -1,6 +1,6 @@
 "use strict";
 
-var DEFAULT_APP_SETTINGS = {fcm: {apiKey: 'AAAASwElybY:APA91bFaTT_zKLcLYqB0soW8PJmFFG7x1F3wiR0MGta9lLsU22uAVa0VD_3zzz-OremJKDEWEf52OD554byamcwAmZldgrQKfwAjjbhZz_5DYT-z1gcflUBFSWVQQ9lSE9KwDBNHULvfVKmQwxa7xNwuPHz-VfdTbw', ttl:60,priority: 'high'},frd: {databaseUrl: 'https://fir-cloudmessaging-4e2cd.firebaseio.com'}};
+var DEFAULT_APP_SETTINGS = {fcm: {apiKey: 'AAAASwElybY:APA91bFaTT_zKLcLYqB0soW8PJmFFG7x1F3wiR0MGta9lLsU22uAVa0VD_3zzz-OremJKDEWEf52OD554byamcwAmZldgrQKfwAjjbhZz_5DYT-z1gcflUBFSWVQQ9lSE9KwDBNHULvfVKmQwxa7xNwuPHz-VfdTbw', ttl:60,priority: 'high'},frd: {databaseUrl: 'https://fir-cloudmessaging-4e2cd.firebaseio.com'}, hide: false};
 
 $(function() {
   bind();
@@ -74,6 +74,20 @@ function resetAndReload() {
   }
 }
 
+function toggleNotificationVisibility() {
+  let settings = getSettings();
+  settings.hide = !settings.hide;
+  setSettings(settings);
+  renderNotificationVisibility();
+}
+
+function renderNotificationVisibility() {
+  let hide = Boolean(getSettings().hide);
+  $('#btn-visibility-icon')
+    .toggleClass('fa-eye', !hide)
+    .toggleClass('fa-eye-slash', hide);
+}
+
 function showSettingsIfNeeded() {
   if (!getSettings().fcm.apiKey) {
     showSettings();
@@ -86,16 +100,6 @@ function showSettings() {
   $('#settings-modal').modal('show');
 }
 
-function showLoading() {
-  $('#btn-send').hide();
-  $('#btn-loading').show();
-}
-
-function hideLoading() {
-  $('#btn-loading').hide();
-  $('#btn-send').show();
-}
-
 function bind() {
   $('body').keydown(function(e) {
     if (e.ctrlKey && e.keyCode === 13) {
@@ -105,6 +109,10 @@ function bind() {
   $("#btn-reset").click(function(event) {
     resetAndReload();
     $(this).blur();
+  });
+  $("#btn-visibility").click(function() {
+    $(this).blur();
+    toggleNotificationVisibility();
   });
   $("#btn-send").click(function() {
     $(this).blur();
@@ -228,6 +236,7 @@ function initSettings() {
   });
 
   showSettingsIfNeeded();
+  renderNotificationVisibility();
 }
 
 function initFirebase() {
@@ -373,7 +382,6 @@ function updateEmptyDeviceListHeader() {
 
 function triggerSendMessage() {
   if (showSettingsIfNeeded()) return;
-  showLoading();
   let settings = getSettings();
   let key = settings.fcm.apiKey;
   let payload = buildPayload();
@@ -387,7 +395,6 @@ function triggerSendMessage() {
     data: JSON.stringify(payload),
     dataType: 'json',
     success: function(data) {
-      hideLoading();
       let alert = $('<div class="alert alert-success alert-dismissible fade in" role="alert" data-alert-timeout="10000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span data-placeholder></span></div>');
       alert.find("span[data-placeholder]").text(JSON.stringify(data));
       $("#alert-container").append(alert);
@@ -397,7 +404,6 @@ function triggerSendMessage() {
       });
     },
     error: function(data) {
-      hideLoading();
       let alert = $('<div class="alert alert-danger alert-dismissible fade in" role="alert" data-alert-timeout="20000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span data-placeholder></span></div>');
       alert.find("span[data-placeholder]").text(JSON.stringify(data));
       $("#alert-container").append(alert);
@@ -431,7 +437,7 @@ function buildPayload() {
       payload.data = {
         ping: {}
       };
-      return payload;
+      break;
     }
     case "#send-text": {
       let title = $("#send-text-title").val();
@@ -444,7 +450,7 @@ function buildPayload() {
           clipboard: clipboard
         }
       };
-      return payload;
+      break;
     }
     case "#send-link": {
       let title = $("#send-link-title").val();
@@ -457,7 +463,7 @@ function buildPayload() {
           open: open
         }
       };
-      return payload;
+      break;
     }
     case "#send-app": {
       let title = $("#send-app-title").val();
@@ -468,11 +474,17 @@ function buildPayload() {
           package: packageName
         }
       };
-      return payload;
+      break;
     }
     case "#send-raw": {
       payload.data = JSON.parse($("#send-raw-data").val());
-      return payload;
+      break;
     }
+    default:
+      return null;
   }
+  if (settings.hide) {
+    payload.data.hide = true;
+  }
+  return payload;
 }
