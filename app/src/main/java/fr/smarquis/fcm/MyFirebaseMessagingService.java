@@ -26,8 +26,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Payload.with(remoteMessage)
-                .saveToSharedPreferences(this)
-                .showNotification(this);
+        Payload payload = Payload.with(remoteMessage).saveToSharedPreferences(this);
+        if (payload.shouldShowNotification()) {
+            payload.showNotification(this);
+        }
     }
 }

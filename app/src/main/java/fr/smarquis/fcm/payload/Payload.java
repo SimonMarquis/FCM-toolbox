@@ -65,23 +65,21 @@ public abstract class Payload implements Comparable<Payload> {
     public static Payload with(RemoteMessage message) {
         Map<String, String> data = message.getData();
         Set<Map.Entry<String, String>> entries = data.entrySet();
-        if (entries.size() == 1) {
-            for (Map.Entry<String, String> entry : entries) {
-                try {
-                    switch (entry.getKey()) {
-                        case PingPayload.KEY:
-                            return PingPayload.create(message);
-                        case TextPayload.KEY:
-                            return TextPayload.create(message);
-                        case LinkPayload.KEY:
-                            return LinkPayload.create(message);
-                        case AppPayload.KEY:
-                            return AppPayload.create(message);
-                        default:
-                            break;
-                    }
-                } catch (Exception ignored) {
+        for (Map.Entry<String, String> entry : entries) {
+            try {
+                switch (entry.getKey()) {
+                    case PingPayload.KEY:
+                        return PingPayload.create(message);
+                    case TextPayload.KEY:
+                        return TextPayload.create(message);
+                    case LinkPayload.KEY:
+                        return LinkPayload.create(message);
+                    case AppPayload.KEY:
+                        return AppPayload.create(message);
+                    default:
+                        break;
                 }
+            } catch (Exception ignored) {
             }
         }
         return RawPayload.create(message);
@@ -168,6 +166,10 @@ public abstract class Payload implements Comparable<Payload> {
     public final Payload saveToSharedPreferences(@NonNull Context context) {
         getSharedPreferences(context).edit().putString(timestamp + "|" + key(), GSON.toJson(this)).apply();
         return this;
+    }
+
+    public boolean shouldShowNotification() {
+        return !(message != null && Boolean.valueOf(message.getData().get("hide")));
     }
 
     public abstract void showNotification(Context context);
