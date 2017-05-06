@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     };
     private View emptyView;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void initRecyclerView() {
         emptyView = findViewById(R.id.empty_view);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (sharedPreferences.contains(key)) {
             final Payload payload = Payload.with(key, sharedPreferences.getString(key, ""));
             adapter.addPayload(payload);
+            recyclerView.smoothScrollToPosition(0);
             onAdapterCountMightHaveChanged();
         }
     }
