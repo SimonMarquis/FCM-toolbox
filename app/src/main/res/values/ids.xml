@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright 2017 Simon Marquis
   ~
@@ -15,15 +17,11 @@
   -->
 
 <resources>
-    <string name="app_name">FCM toolbox</string>
-    <string name="payload_app_install">Install</string>
-    <string name="payload_app_remove">Remove</string>
-    <string name="payload_link_open">Open</string>
-    <string name="payload_text_copy">Copy</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="menu_share_token">Share token</string>
-    <string name="menu_delete_all">Delete all</string>
 
-    <string name="notification_channel_id" translatable="false">payloads</string>
-    <string name="notification_channel_name">FCM payloads</string>
+    <item name="app_notification_id" type="id" />
+    <item name="link_notification_id" type="id" />
+    <item name="ping_notification_id" type="id" />
+    <item name="raw_notification_id" type="id" />
+    <item name="text_notification_id" type="id" />
+
 </resources>

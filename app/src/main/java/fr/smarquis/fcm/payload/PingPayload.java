@@ -49,12 +49,12 @@ public class PingPayload extends Payload {
                 .setSmallIcon(R.drawable.ic_notifications_none_24dp)
                 .setContentTitle("Ping")
                 .build();
-        showNotification(context, notification, PingPayload.class.hashCode());
+        showNotification(context, notification, R.id.ping_notification_id);
     }
 
     @Override
     public void cancelNotification(Context context) {
-        cancelNotification(context, PingPayload.class.hashCode());
+        cancelNotification(context, R.id.ping_notification_id);
     }
 
     @Override

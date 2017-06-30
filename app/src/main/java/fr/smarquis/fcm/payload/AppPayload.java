@@ -70,7 +70,7 @@ public class AppPayload extends Payload {
                 .setContentText(packageName)
                 .addAction(0, context.getString(R.string.payload_app_install), PendingIntent.getActivity(context, 0, installIntent, 0))
                 .addAction(0, context.getString(R.string.payload_app_remove), PendingIntent.getActivity(context, 0, removeIntent, 0));
-        showNotification(context, builder.build(), String.valueOf(timestamp), AppPayload.class.hashCode());
+        showNotification(context, builder.build(), String.valueOf(timestamp), R.id.app_notification_id);
     }
 
     public Intent getInstallIntent() {
@@ -87,7 +87,7 @@ public class AppPayload extends Payload {
 
     @Override
     public void cancelNotification(Context context) {
-        cancelNotification(context, String.valueOf(timestamp), AppPayload.class.hashCode());
+        cancelNotification(context, String.valueOf(timestamp), R.id.app_notification_id);
     }
 
     @Override

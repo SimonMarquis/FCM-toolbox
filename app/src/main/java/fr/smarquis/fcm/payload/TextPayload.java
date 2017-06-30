@@ -20,14 +20,10 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.text.style.BulletSpan;
-import android.text.style.ImageSpan;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
 import com.google.firebase.messaging.RemoteMessage;
@@ -83,12 +79,12 @@ public class TextPayload extends Payload {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                 .addAction(0, context.getString(R.string.payload_text_copy), PendingIntent.getActivity(context, 0, intent, 0))
                 .build();
-        showNotification(context, notification, String.valueOf(timestamp), TextPayload.class.hashCode());
+        showNotification(context, notification, String.valueOf(timestamp), R.id.text_notification_id);
     }
 
     @Override
     public void cancelNotification(Context context) {
-        cancelNotification(context, String.valueOf(timestamp), TextPayload.class.hashCode());
+        cancelNotification(context, String.valueOf(timestamp), R.id.text_notification_id);
     }
 
     @Override

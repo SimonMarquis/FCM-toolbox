@@ -111,12 +111,12 @@ public class RawPayload extends Payload {
                 .setContentText(content)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
                 .build();
-        showNotification(context, notification, String.valueOf(timestamp), RawPayload.class.hashCode());
+        showNotification(context, notification, String.valueOf(timestamp), R.id.raw_notification_id);
     }
 
     @Override
     public void cancelNotification(Context context) {
-        cancelNotification(context, String.valueOf(timestamp), RawPayload.class.hashCode());
+        cancelNotification(context, String.valueOf(timestamp), R.id.raw_notification_id);
     }
 
     @Override

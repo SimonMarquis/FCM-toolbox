@@ -74,7 +74,7 @@ public class LinkPayload extends Payload {
         if (!TextUtils.isEmpty(url)) {
             builder.addAction(0, context.getString(R.string.payload_link_open), PendingIntent.getActivity(context, 0, intent, 0));
         }
-        showNotification(context, builder.build(), String.valueOf(timestamp), LinkPayload.class.hashCode());
+        showNotification(context, builder.build(), String.valueOf(timestamp), R.id.link_notification_id);
     }
 
     public Intent getIntent() {
@@ -85,7 +85,7 @@ public class LinkPayload extends Payload {
 
     @Override
     public void cancelNotification(Context context) {
-        cancelNotification(context, String.valueOf(timestamp), LinkPayload.class.hashCode());
+        cancelNotification(context, String.valueOf(timestamp), R.id.link_notification_id);
     }
 
     @Override

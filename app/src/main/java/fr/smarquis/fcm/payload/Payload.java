@@ -17,11 +17,15 @@
 package fr.smarquis.fcm.payload;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
@@ -178,32 +182,43 @@ public abstract class Payload implements Comparable<Payload> {
 
     public abstract void cancelNotification(Context context);
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static void createNotificationChannel(Context context) {
+        String id = context.getString(R.string.notification_channel_id);
+        CharSequence name = context.getString(R.string.notification_channel_name);
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel = new NotificationChannel(id, name, importance);
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setShowBadge(true);
+        getNotificationManager(context).createNotificationChannel(channel);
+    }
+
     @NonNull
     final NotificationCompat.Builder getNotificationBuilder(@NonNull Context context, RemoteMessage message) {
-        return new NotificationCompat.Builder(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(context);
+        }
+        return new NotificationCompat.Builder(context, context.getString(R.string.notification_channel_id))
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setContentIntent(FcmPayloadActivity.createPendingIntent(context, message))
                 .setLocalOnly(true)
-                .setAutoCancel(false)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                ;
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE);
     }
 
-    final void showNotification(@NonNull Context context, @NonNull Notification notification, @NonNull String tag, int id) {
+    final void showNotification(@NonNull Context context, @NonNull Notification notification, @NonNull String tag, @IdRes int id) {
         getNotificationManager(context).notify(tag, id, notification);
     }
 
-    final void showNotification(@NonNull Context context, @NonNull Notification notification, int id) {
+    final void showNotification(@NonNull Context context, @NonNull Notification notification, @IdRes int id) {
         getNotificationManager(context).notify(id, notification);
     }
 
-    final void cancelNotification(@NonNull Context context, @NonNull String tag, int id) {
+    final void cancelNotification(@NonNull Context context, @NonNull String tag, @IdRes int id) {
         getNotificationManager(context).cancel(tag, id);
     }
 
-    final void cancelNotification(@NonNull Context context, int id) {
+    final void cancelNotification(@NonNull Context context, @IdRes int id) {
         getNotificationManager(context).cancel(id);
     }
 
