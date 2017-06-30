@@ -16,6 +16,7 @@
 
 package fr.smarquis.fcm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -35,6 +36,7 @@ class TokenFetcher extends AsyncTask<Void, Void, String> {
     private static final Intent INTENT = new Intent(INTENT_ACTION);
     private final DatabaseReference ref;
 
+    @SuppressLint("StaticFieldLeak")
     private final Context context;
 
     TokenFetcher(Context context, DatabaseReference ref) {
