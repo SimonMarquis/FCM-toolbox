@@ -84,15 +84,6 @@ public class TextPayload extends Payload {
                 .addAction(0, context.getString(R.string.payload_text_copy), PendingIntent.getActivity(context, 0, intent, 0))
                 .build();
         showNotification(context, notification, String.valueOf(timestamp), TextPayload.class.hashCode());
-        if (clipboard) {
-            final Context app = context.getApplicationContext();
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    copyToClipboard(app.getApplicationContext(), text);
-                }
-            });
-        }
     }
 
     @Override
@@ -110,5 +101,18 @@ public class TextPayload extends Payload {
                     .build();
         }
         return display;
+    }
+
+    @Override
+    public void execute(Context context) {
+        if (clipboard) {
+            final Context app = context.getApplicationContext();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    copyToClipboard(app.getApplicationContext(), text);
+                }
+            });
+        }
     }
 }

@@ -75,13 +75,6 @@ public class LinkPayload extends Payload {
             builder.addAction(0, context.getString(R.string.payload_link_open), PendingIntent.getActivity(context, 0, intent, 0));
         }
         showNotification(context, builder.build(), String.valueOf(timestamp), LinkPayload.class.hashCode());
-        if (open) {
-            try {
-                context.getApplicationContext().startActivity(intent);
-            } catch (Exception ignore) {
-
-            }
-        }
     }
 
     public Intent getIntent() {
@@ -105,5 +98,16 @@ public class LinkPayload extends Payload {
                     .build();
         }
         return display;
+    }
+
+    @Override
+    public void execute(Context context) {
+        if (open) {
+            try {
+                context.getApplicationContext().startActivity(getIntent());
+            } catch (Exception ignore) {
+
+            }
+        }
     }
 }

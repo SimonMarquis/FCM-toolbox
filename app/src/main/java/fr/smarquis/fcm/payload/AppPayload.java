@@ -100,4 +100,9 @@ public class AppPayload extends Payload {
         }
         return display;
     }
+
+    @Override
+    public void execute(Context context) {
+
+    }
 }

@@ -172,6 +172,8 @@ public abstract class Payload implements Comparable<Payload> {
         return !(message != null && Boolean.valueOf(message.getData().get("hide")));
     }
 
+    public abstract void execute(Context context);
+
     public abstract void showNotification(Context context);
 
     public abstract void cancelNotification(Context context);

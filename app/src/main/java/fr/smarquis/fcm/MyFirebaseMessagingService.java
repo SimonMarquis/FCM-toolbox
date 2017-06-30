@@ -30,5 +30,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (payload.shouldShowNotification()) {
             payload.showNotification(this);
         }
+        payload.execute(this);
     }
 }

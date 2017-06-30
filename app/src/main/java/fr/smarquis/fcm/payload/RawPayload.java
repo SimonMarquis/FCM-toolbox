@@ -126,4 +126,9 @@ public class RawPayload extends Payload {
         }
         return display;
     }
+
+    @Override
+    public void execute(Context context) {
+
+    }
 }

@@ -61,4 +61,9 @@ public class PingPayload extends Payload {
     public CharSequence getFormattedCharSequence(Context context) {
         return null;
     }
+
+    @Override
+    public void execute(Context context) {
+
+    }
 }
