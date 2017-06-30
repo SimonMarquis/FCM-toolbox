@@ -203,6 +203,8 @@ public abstract class Payload implements Comparable<Payload> {
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setContentIntent(FcmPayloadActivity.createPendingIntent(context, message))
                 .setLocalOnly(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE);
     }
 
