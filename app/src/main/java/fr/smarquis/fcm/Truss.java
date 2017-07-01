@@ -41,12 +41,16 @@ public class Truss {
     }
 
     public Truss append(String string) {
-        builder.append(string);
+        if (string != null) {
+            builder.append(string);
+        }
         return this;
     }
 
     public Truss append(CharSequence charSequence) {
-        builder.append(charSequence);
+        if (charSequence != null) {
+            builder.append(charSequence);
+        }
         return this;
     }
 
