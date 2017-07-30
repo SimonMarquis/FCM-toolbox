@@ -395,8 +395,8 @@ function triggerSendMessage() {
     data: JSON.stringify(payload),
     dataType: 'json',
     success: function(data) {
-      let alert = $('<div class="alert alert-success alert-dismissible fade in" role="alert" data-alert-timeout="10000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span data-placeholder></span></div>');
-      alert.find("span[data-placeholder]").text(JSON.stringify(data));
+      let alert = $('<div class="alert alert-success alert-dismissible fade in" role="alert" data-alert-timeout="10000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><pre data-placeholder></pre></div>');
+      alert.find("pre[data-placeholder]").text(JSON.stringify(data, null, 2));
       $("#alert-container").append(alert);
       alert.slideDown();
       alert.delay(10000).fadeOut(function() {
@@ -404,8 +404,8 @@ function triggerSendMessage() {
       });
     },
     error: function(data) {
-      let alert = $('<div class="alert alert-danger alert-dismissible fade in" role="alert" data-alert-timeout="20000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span data-placeholder></span></div>');
-      alert.find("span[data-placeholder]").text(JSON.stringify(data));
+      let alert = $('<div class="alert alert-danger alert-dismissible fade in" role="alert" data-alert-timeout="20000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><pre data-placeholder></pre></div>');
+      alert.find("pre[data-placeholder]").text(JSON.stringify(data, null, 2));
       $("#alert-container").append(alert);
       alert.slideDown();
       alert.delay(20000).fadeOut(function() {
