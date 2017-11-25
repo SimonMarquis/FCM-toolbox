@@ -67,6 +67,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         updateSubtitle();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateSubtitle();
+    }
+
     private void registerReceivers() {
         Payload.registerOnSharedPreferenceChanges(this, this);
         LocalBroadcastManager instance = LocalBroadcastManager.getInstance(this);
