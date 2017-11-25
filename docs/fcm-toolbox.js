@@ -84,8 +84,10 @@ function toggleNotificationVisibility() {
 function renderNotificationVisibility() {
   let hide = Boolean(getSettings().hide);
   $('#btn-visibility-icon')
-    .toggleClass('fa-eye', !hide)
-    .toggleClass('fa-eye-slash', hide);
+    .text(hide ? "notifications_off" : "notifications")
+    .parent()
+      .addClass(hide ? "btn-outline-primary" : "btn-primary")
+      .removeClass(hide ? "btn-primary" : "btn-outline-primary");
 }
 
 function showSettingsIfNeeded() {
@@ -130,17 +132,17 @@ function bind() {
     let element = $(this);
     try {
       $.parseJSON(element.val());
-      element.parent().removeClass('has-danger').addClass('has-success');
+      element.removeClass('is-invalid').addClass('is-valid');
     }
     catch (err) {
-      element.parent().removeClass('has-success').addClass('has-danger');
+      element.removeClass('is-valid').addClass('is-invalid');
     }
   });
   $('#send-raw-data').focusout(function () {
     let element = $(this);
     try {
       element.val(JSON.stringify(JSON.parse(element.val()), undefined, 4));
-      element.attr('rows', Math.max(4, (element.val().match(/\n/g)||[]).length + 1));
+      element.attr('rows', Math.max(3, (element.val().match(/\n/g)||[]).length + 1));
     } catch (err) {}
   })
   .val(JSON.stringify({key: 'value'}, undefined, 4))
@@ -163,7 +165,7 @@ function bind() {
       }
     });
 
-    $.each( [ element, aliasBtn, addBtn, dropdownBtn ], function( i, l ){
+    $.each( [ element, aliasBtn ], function( i, l ){
       if (isConnectedUser) {
         l.addClass('list-group-item-success');
       } else {
@@ -172,7 +174,7 @@ function bind() {
     });
 
     if (currentToken) {
-      element.parent().parent().parent().removeClass("has-danger");
+      element.removeClass("is-invalid");
       addBtn.prop('disabled', false);
       sendBtn.prop('disabled', false);
 
@@ -183,7 +185,7 @@ function bind() {
         }
       });
     } else {
-      element.parent().parent().parent().addClass("has-danger");
+      element.addClass("is-invalid");
       addBtn.prop('disabled', true);
       sendBtn.prop('disabled', true);
     }
@@ -213,9 +215,9 @@ function initSettings() {
   });
   fcmApiKey.parent().bind('change', function(){
     if (fcmApiKey.val()) {
-      $(this).removeClass("has-danger");
+      fcmApiKey.removeClass("is-invalid");
     } else {
-      $(this).addClass("has-danger");
+      fcmApiKey.addClass("is-invalid");
     }
   }).change();
 
@@ -276,7 +278,7 @@ function displayDeviceTokens() {
   let list = findDeviceTokenList();
   list.empty();
   $.each(getDeviceTokens(), function (index, token) {
-    let trash = $('<i class="fa fa-trash">&nbsp;&nbsp;</i>');
+    let trash = $('<i class="material-icons align-middle">clear</i>');
     trash.click(function(event) {
       removeDeviceToken(token);
       $('#form-device-token').change();
@@ -284,9 +286,10 @@ function displayDeviceTokens() {
       event.stopPropagation();
     });
     list.append(
-      $('<a href="#" class="dropdown-item dropdown-item-action"></a>')
+      $('<a href="#" class="dropdown-item dropdown-item-action list-group-item-light"></a>')
       .attr('data-token', token.value)
       .text(token.label)
+      .prepend("&nbsp;&nbsp;")
       .prepend(trash)
       );
   });
@@ -337,7 +340,7 @@ function displayConnectedDevices() {
   let list = findDeviceUserList();
   list.empty();
   users.forEach(function (user, index) {
-    let add = $('<i class="fa fa-plus">&nbsp;&nbsp;</i>');
+    let add = $('<i class="material-icons align-middle">add</i>');
     add.click(function(event) {
       addDeviceToken(user.value, user.label);
       $('#form-device-token').change();
@@ -345,9 +348,10 @@ function displayConnectedDevices() {
       event.stopPropagation();
     });
     list.append(
-      $('<a href="#" class="dropdown-item dropdown-item-action text-success"></a>')
+      $('<a href="#" class="dropdown-item dropdown-item-action list-group-item-light text-success"></a>')
       .attr('data-token', user.value)
       .text(user.label)
+      .prepend("&nbsp;&nbsp;")
       .prepend(add)
       );
   });
@@ -395,8 +399,8 @@ function triggerSendMessage() {
     data: JSON.stringify(payload),
     dataType: 'json',
     success: function(data) {
-      let alert = $('<div class="alert alert-success alert-dismissible fade in" role="alert" data-alert-timeout="10000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><pre data-placeholder></pre></div>');
-      alert.find("pre[data-placeholder]").text(JSON.stringify(data, null, 2));
+      let alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert" data-alert-timeout="10000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span data-placeholder></span></div>');
+      alert.find("span[data-placeholder]").text(JSON.stringify(data));
       $("#alert-container").append(alert);
       alert.slideDown();
       alert.delay(10000).fadeOut(function() {
@@ -404,8 +408,8 @@ function triggerSendMessage() {
       });
     },
     error: function(data) {
-      let alert = $('<div class="alert alert-danger alert-dismissible fade in" role="alert" data-alert-timeout="20000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><pre data-placeholder></pre></div>');
-      alert.find("pre[data-placeholder]").text(JSON.stringify(data, null, 2));
+      let alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert" data-alert-timeout="20000" style="display: none;"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><span data-placeholder></span></div>');
+      alert.find("span[data-placeholder]").text(JSON.stringify(data));
       $("#alert-container").append(alert);
       alert.slideDown();
       alert.delay(20000).fadeOut(function() {
