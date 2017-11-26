@@ -5,6 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="https://github.com/SimonMarquis">
+  <meta name="description" content="Firebase Cloud Messaging toolbox">
+  <meta name="keywords" content="FirebaseCloudMessaging,FCM,Android">
   <link rel="shortcut icon" href="favicon.png">
 
   <title>FCM toolbox</title>
@@ -12,29 +14,17 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
   <link href="fcm-toolbox.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+  <script src="fcm-toolbox.js"></script>
 </head>
 <body>
 
   <div class="container">
-
-    <!-- navbar -->
-<!--
-     <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mb-3">
-
-      <span class="navbar-brand text-muted">
-        <img src="favicon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-          FCM toolbox
-      </span>
-
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link ml-3" href="" data-toggle="modal" data-target="#tutorialModal"> <i class="material-icons align-middle">school</i></a>
-        <a class="nav-item nav-link ml-3" href="https://github.com/SimonMarquis/FCM-toolbox" target="_blank"> <i class="material-icons align-middle">public</i></a>
-        <a class="nav-item nav-link ml-3" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" target="_blank"> <i class="material-icons align-middle">shop</i></i></a>
-        <a class="nav-item nav-link ml-3" href="" data-toggle="modal" data-target="#settings-modal"> <i class="material-icons align-middle">settings</i></a>
-      </div>
-
-    </nav>
- -->    <!-- navbar -->
 
       <!-- Card -->
       <div class="card bg-light">
@@ -48,7 +38,7 @@
             <div class="navbar-nav ml-auto">
               <a class="nav-item nav-link ml-3 text-secondary" href="" data-toggle="modal" data-target="#tutorialModal" title="Tutorial"> <i class="material-icons align-middle">school</i></a>
               <a class="nav-item nav-link ml-3 text-secondary" href="https://github.com/SimonMarquis/FCM-toolbox" title="GitHub" target="_blank"> <i class="material-icons align-middle">public</i></a>
-              <a class="nav-item nav-link ml-3 text-secondary" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" title="Play Store" target="_blank"> <i class="material-icons align-middle">shop</i></i></a>
+              <a class="nav-item nav-link ml-3 text-secondary" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" title="Play Store" target="_blank"> <i class="material-icons align-middle">shop</i></a>
               <a class="nav-item nav-link ml-3 text-secondary" href="" data-toggle="modal" data-target="#settings-modal" title="Settings"> <i class="material-icons align-middle">settings</i></a>
             </div>
 
@@ -56,7 +46,7 @@
         </div>
         <!-- navbar -->
 
-        <div class="card-header">
+        <div class="card-header" role="tablist">
           <nav id="payload-type" class="nav nav-tabs card-header-tabs nav-fill">
               <a class="text-secondary nav-item nav-link text-secondary active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i> Ping</a>
               <a class="text-secondary nav-item nav-link text-secondary" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">message</i> Text</a>
@@ -65,28 +55,6 @@
               <a class="text-secondary nav-item nav-link text-secondary" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i> Raw</a>
           </nav>
         </div>
-
-<!-- 
-        <div class="card-header">
-          <ul class="nav nav-tabs card-header-tabs nav-fill">
-            <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications</i> Ping</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">textsms</i> Text</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#send-link" role="tab"><i class="material-icons align-middle">link</i> Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#send-app" role="tab"><i class="material-icons align-middle">android</i> App</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i> Raw</a>
-            </li>
-          </ul>
-        </div>
- -->
 
       <div class=" tab-content">
 
@@ -164,8 +132,6 @@
         <!-- Raw -->
 
       </div>
-        
-
 
       <!-- Footer -->
       <div class="card-footer text-muted ">
@@ -176,7 +142,7 @@
             <div class="input-group">
               <input class="form-control border-right-0" type="text" value="" id="form-device-token">
               <span id="btn-device-token-alias" class="input-group-addon"></span>
-              <span class="input-group-btn">
+              <div class="input-group-btn">
                 <div class="dropdown-menu dropdown-menu-right">
                   <h6 id="list-device-empty" class="dropdown-header">No device available</h6>
                   <div id="list-device-tokens">
@@ -184,22 +150,21 @@
                   <div id="list-device-users">
                   </div>
                 </div>
-                <button id="btn-add-device-token" type="button" class="btn btn-outline-secondary border-right-0"><i class="material-icons align-middle">add</i></button>
-                <button id="btn-device-dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons align-middle md-24">search</i> </button>
-              </span>
+                <button id="btn-add-device-token" type="button" class="btn btn-outline-secondary border-right-0" title="Add"><i class="material-icons align-middle">add</i></button>
+                <button id="btn-device-dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Search"><i class="material-icons align-middle md-24">search</i> </button>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="btn-group float-right" role="group">
-          <button id="btn-visibility" type="button" class="btn btn-sm btn-outline-primary" title="Visibility"><i id="btn-visibility-icon" class="material-icons align-middle md-20">notifications_off</i></button>
+          <button id="btn-visibility" type="button" class="btn btn-sm btn-outline-primary" title="Notification"><i id="btn-visibility-icon" class="material-icons align-middle md-20">notifications_off</i></button>
           <button id="btn-send" type="button" class="btn btn-sm btn-outline-primary"><b>Send</b></button>
         </div>
 
         <div class="clearfix"></div>
 
         <div id="alert-container" class="mt-3"></div>
-        </div>
 
       </div>
       <!-- Footer -->
@@ -222,21 +187,21 @@
               <h5>Firebase Cloud Messaging <small class="text-muted">(Required)</small></h5>
               <p></p>
               <div class="form-group row">
-                <label for="form-api-key" class="col-sm-3 col-form-label">API Key</label>
+                <label for="settings-fcm-api-key" class="col-sm-3 col-form-label">API Key</label>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" value="" id="settings-fcm-api-key" required="true">
+                  <input class="form-control" type="text" value="" id="settings-fcm-api-key" required>
                 </div>
               </div>
 
               <div class="form-group row">
-                <label for="form-input-ttl" class="col-sm-3 col-form-label">Ttl</label>
+                <label for="settings-fcm-ttl" class="col-sm-3 col-form-label">Ttl</label>
                 <div class="col-sm-9">
                   <input class="form-control" type="number" value="" id="settings-fcm-ttl">
                 </div>
               </div>
 
               <div class="form-group row">
-                <label for="form-input-priority" class="col-sm-3 col-form-label">Priority</label>
+                <label for="settings-fcm-priority" class="col-sm-3 col-form-label">Priority</label>
                 <div class="col-sm-9">
                   <select class="form-control" id="settings-fcm-priority">
                     <option value="high">High</option>
@@ -250,7 +215,7 @@
               <h5>Firebase Realtime Database <small class="text-muted">(Optional)</small></h5>
               <p></p>
               <div class="form-group row">
-                <label for="form-api-key" class="col-sm-3 col-form-label">Url</label>
+                <label for="settings-frd-database-url" class="col-sm-3 col-form-label">Url</label>
                 <div class="col-sm-9">
                   <input class="form-control" type="text" value="" id="settings-frd-database-url" required>
                   <small id="emailHelp" class="form-text text-muted">Modification requires a page reload</small>
@@ -295,7 +260,7 @@
             Or
             <ol>
               <li><strong>Download</strong> and <strong>launch</strong> the corresponding app on your device</li>
-              <li>Open the device dropdown with <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"><i class="material-icons align-middle md-18">search</i></i></button></li>
+              <li>Open the device dropdown with <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"><i class="material-icons align-middle md-18">search</i></button></li>
               <li>Click the <button type="button" class="btn btn-secondary btn-sm"><i class="material-icons align-middle md-18">add</i></button> button next to the corresponding device</li>
             </ol>
           </div>
@@ -305,14 +270,6 @@
     <!-- Dialog tutorial -->
 
   </div> <!-- /container -->
-
-
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  
-  <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
-  <script src="fcm-toolbox.js"></script>
 
 </body>
 </html>

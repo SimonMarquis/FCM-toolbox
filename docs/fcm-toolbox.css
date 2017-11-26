@@ -1,20 +1,20 @@
 /* Space out content a bit */
 body {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
 }
 
 /* Customize container */
 @media (min-width: 48em) {
-  .container {
-    max-width: 46rem;
-  }
+	.container {
+		max-width: 46rem;
+	}
 }
 
 /* Tweak the active state of nav bar items (transparent) */
 nav > a.nav-item.nav-link.active {
-  background-color: #f8f9fa;
-  border-bottom-color: #f8f9fa;
+	background-color: #f8f9fa;
+	border-bottom-color: #f8f9fa;
 }
 
 /* Material icons sizes */
@@ -26,5 +26,9 @@ nav > a.nav-item.nav-link.active {
 
 /* Prevent alert container to use margin when empty */
 #alert-container:empty {
-   display: none;
+	display: none;
+}
+
+#alert-container > div.alert > pre[data-placeholder] {
+	margin-bottom: 0px;
 }
