@@ -12,15 +12,15 @@ body {
 }
 
 /* Navbar item with linebreak to split icon/text if not enough horizontal space */
-nav#payload-type>a>span:after {
-    content:"\A";
-    white-space: pre;
+nav#payload-type > a > span:after {
+	content:"\A";
+	white-space: pre;
 }
 /* Navbar item with space to split icon/text */
 @media (min-width: 576px) {
-	nav#payload-type>a>span:after {
-	    content:" ";
-    	white-space: pre;
+	nav#payload-type > a > span:after {
+		content:" ";
+		white-space: pre;
 	}
 }
 
@@ -42,6 +42,12 @@ nav > a.nav-item.nav-link.active {
 	display: none;
 }
 
+/* Remove bottom margin on alerts */
 #alert-container > div.alert > pre[data-placeholder] {
-	margin-bottom: 0px;
+	margin-bottom: 0;
+}
+
+/* Remove bottom margin on last form item */
+div#forms > div[role=tabpanel] > div.form-group.row:last-child {
+	margin-bottom: 0;
 }
