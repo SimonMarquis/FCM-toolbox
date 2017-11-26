@@ -11,6 +11,19 @@ body {
 	}
 }
 
+/* Navbar item with linebreak to split icon/text if not enough horizontal space */
+nav#payload-type>a>span:after {
+    content:"\A";
+    white-space: pre;
+}
+/* Navbar item with space to split icon/text */
+@media (min-width: 576px) {
+	nav#payload-type>a>span:after {
+	    content:" ";
+    	white-space: pre;
+	}
+}
+
 /* Tweak the active state of nav bar items (transparent) */
 nav > a.nav-item.nav-link.active {
 	background-color: #f8f9fa;
