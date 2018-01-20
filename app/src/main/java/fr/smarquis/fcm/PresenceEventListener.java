@@ -68,7 +68,8 @@ class PresenceEventListener implements ValueEventListener {
 
     @Override
     public void onDataChange(DataSnapshot snapshot) {
-        boolean connected = snapshot.getValue(Boolean.class);
+        Boolean value = snapshot.getValue(Boolean.class);
+        Boolean connected = value != null && value;
         if (connected) {
             final String token = FirebaseInstanceId.getInstance().getToken();
             if (TextUtils.isEmpty(token)) {

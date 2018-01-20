@@ -11,16 +11,16 @@
 
   <title>FCM toolbox</title>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-  <link href="fcm-toolbox.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="fcm-toolbox.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  
-  <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
-  <script src="fcm-toolbox.js"></script>
+  <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script defer src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script defer src="fcm-toolbox.js"></script>
 </head>
 <body>
 
@@ -79,7 +79,9 @@
             <div class="col-sm-12">
               <div class="input-group">
                 <input class="form-control" type="text" value="" id="send-text-message" placeholder="Message">
-                <span class="input-group-addon"><label style="margin-bottom:0px;"><input type="checkbox" aria-label="" id="send-text-clipboard"> Clipboard</label></span>
+                <div class="input-group-append">
+                  <div class="input-group-text"><label style="margin-bottom:0px;"><input type="checkbox" id="send-text-clipboard">&nbsp;Clipboard</label></div>
+                </div>
               </div>
             </div>
           </div>
@@ -98,7 +100,9 @@
             <div class="col-sm-12">
               <div class="input-group">
                 <input class="form-control" type="url" value="" id="send-link-url" placeholder="https://www.google.com">
-                <span class="input-group-addon"><label style="margin-bottom:0px;"><input type="checkbox" aria-label="" id="send-link-url-open"> Open</label></span>
+                <div class="input-group-append">
+                  <div class="input-group-text"><label style="margin-bottom:0px;"><input type="checkbox" id="send-link-url-open">&nbsp;Open</label></div>
+                </div>
               </div>
             </div>
           </div>
@@ -140,8 +144,8 @@
           <div class="col-sm-12">
             <div class="input-group">
               <input class="form-control border-right-0" type="text" value="" id="form-device-token" placeholder="Token">
-              <span id="btn-device-token-alias" class="input-group-addon"></span>
-              <div class="input-group-btn">
+              <div class="input-group-append">
+                <label id="btn-device-token-alias" class="input-group-text"></label>
                 <div class="dropdown-menu dropdown-menu-right">
                   <h6 id="list-device-empty" class="dropdown-header">No device available</h6>
                   <div id="list-device-tokens">

@@ -136,7 +136,7 @@ public class PayloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         PingViewHolder(View v) {
             super(v);
-            timestamp = (TextView) v.findViewById(R.id.item_timestamp);
+            timestamp = v.findViewById(R.id.item_timestamp);
         }
 
         void onBind(Payload payload) {
@@ -158,9 +158,9 @@ public class PayloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextViewHolder(View v) {
             super(v);
             context = v.getContext();
-            timestamp = (TextView) v.findViewById(R.id.item_timestamp);
-            text = (TextView) v.findViewById(R.id.item_text);
-            button = (Button) v.findViewById(R.id.item_text_copy);
+            timestamp = v.findViewById(R.id.item_timestamp);
+            text = v.findViewById(R.id.item_text);
+            button = v.findViewById(R.id.item_text_copy);
         }
 
         void onBind(final Payload payload) {
@@ -186,8 +186,8 @@ public class PayloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         RawViewHolder(View v) {
             super(v);
             context = v.getContext();
-            timestamp = (TextView) v.findViewById(R.id.item_timestamp);
-            text = (TextView) v.findViewById(R.id.item_text);
+            timestamp = v.findViewById(R.id.item_timestamp);
+            text = v.findViewById(R.id.item_text);
         }
 
         void onBind(Payload payload) {
@@ -209,9 +209,9 @@ public class PayloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LinkViewHolder(View v) {
             super(v);
             context = v.getContext();
-            timestamp = (TextView) v.findViewById(R.id.item_timestamp);
-            text = (TextView) v.findViewById(R.id.item_text);
-            button = (Button) v.findViewById(R.id.item_link_open);
+            timestamp = v.findViewById(R.id.item_timestamp);
+            text = v.findViewById(R.id.item_text);
+            button = v.findViewById(R.id.item_link_open);
         }
 
         public Context getContext() {
@@ -249,10 +249,10 @@ public class PayloadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         AppViewHolder(View v) {
             super(v);
             context = v.getContext();
-            timestamp = (TextView) v.findViewById(R.id.item_timestamp);
-            text = (TextView) v.findViewById(R.id.item_text);
-            buttonRemove = (Button) v.findViewById(R.id.item_app_remove);
-            buttonInstall = (Button) v.findViewById(R.id.item_app_install);
+            timestamp = v.findViewById(R.id.item_timestamp);
+            text = v.findViewById(R.id.item_text);
+            buttonRemove = v.findViewById(R.id.item_app_remove);
+            buttonInstall = v.findViewById(R.id.item_app_install);
         }
 
         void onBind(final Payload payload) {

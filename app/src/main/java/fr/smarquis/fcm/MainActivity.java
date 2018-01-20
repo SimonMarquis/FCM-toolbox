@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void initRecyclerView() {
         emptyView = findViewById(R.id.empty_view);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

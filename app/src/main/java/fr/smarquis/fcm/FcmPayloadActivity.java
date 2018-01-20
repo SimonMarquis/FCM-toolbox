@@ -46,7 +46,8 @@ public class FcmPayloadActivity extends Activity {
     }
 
     public static PendingIntent createPendingIntent(@NonNull Context context, @NonNull RemoteMessage message) {
-        return PendingIntent.getActivity(context, message.getMessageId().hashCode(), FcmPayloadActivity.createIntent(context, message), 0);
+        String messageId = message.getMessageId();
+        return PendingIntent.getActivity(context, messageId != null ? messageId.hashCode() : (int) System.currentTimeMillis(), FcmPayloadActivity.createIntent(context, message), 0);
     }
 
     private static CharSequence buildMessage(@Nullable RemoteMessage message) {
