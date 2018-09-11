@@ -52,19 +52,7 @@ public class RawPayload extends Payload {
 
     private static String extractAsJsonObject(RemoteMessage message) {
         try {
-            JSONObject obj = new JSONObject();
-            final Map<String, String> data = message.getData();
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                try {
-                    obj.put(entry.getKey(), new JSONObject(entry.getValue()));
-                } catch (JSONException e1) {
-                    try {
-                        obj.put(entry.getKey(), new JSONArray(entry.getValue()));
-                    } catch (JSONException e2) {
-                        obj.put(entry.getKey(), entry.getValue());
-                    }
-                }
-            }
+            JSONObject obj = new JSONObject(message.getData());
             return obj.toString();
         } catch (Exception e) {
             return extractCharSequence(message).toString();
