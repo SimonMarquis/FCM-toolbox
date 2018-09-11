@@ -24,7 +24,6 @@ import android.text.style.StyleSpan;
 
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,20 +51,7 @@ public class RawPayload extends Payload {
 
     private static String extractAsJsonObject(RemoteMessage message) {
         try {
-            JSONObject obj = new JSONObject();
-            final Map<String, String> data = message.getData();
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                try {
-                    obj.put(entry.getKey(), new JSONObject(entry.getValue()));
-                } catch (JSONException e1) {
-                    try {
-                        obj.put(entry.getKey(), new JSONArray(entry.getValue()));
-                    } catch (JSONException e2) {
-                        obj.put(entry.getKey(), entry.getValue());
-                    }
-                }
-            }
-            return obj.toString();
+            return new JSONObject(message.getData()).toString();
         } catch (Exception e) {
             return extractCharSequence(message).toString();
         }
