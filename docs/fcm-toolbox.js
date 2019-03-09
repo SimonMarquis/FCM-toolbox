@@ -416,8 +416,9 @@ function triggerSendMessage() {
         data: JSON.stringify(payload),
         dataType: "json",
         success: function(data) {
-            var alert = $("<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-placeholder></pre></div>");
-            alert.find("pre[data-placeholder]").text(JSON.stringify(data, null, 2));
+            var alert = $("<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>");
+            alert.find("pre[data-request]").text(JSON.stringify(payload, null, 2));
+            alert.find("pre[data-response]").text(JSON.stringify(data, null, 2));
             $("#alert-container").prepend(alert);
             alert.slideDown();
             alert.delay(10000).fadeOut(function() {
@@ -425,8 +426,9 @@ function triggerSendMessage() {
             });
         },
         error: function(data) {
-            var alert = $("<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-placeholder></pre></div>");
-            alert.find("pre[data-placeholder]").text(JSON.stringify(data, null, 2));
+            var alert = $("<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>");
+            alert.find("pre[data-request]").text(JSON.stringify(payload, null, 2));
+            alert.find("pre[data-response]").text(JSON.stringify(data, null, 2));
             $("#alert-container").prepend(alert);
             alert.slideDown();
             alert.delay(20000).fadeOut(function() {
