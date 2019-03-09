@@ -51,3 +51,8 @@ nav > a.nav-item.nav-link.active {
 div#forms > div[role=tabpanel] > div.form-group.row:last-child {
 	margin-bottom: 0;
 }
+
+/* Replace default active (blue) background color with neutral gray */
+.dropdown-item.active, .dropdown-item:active {
+	background-color: rgba(0,0,0,.2);
+}
