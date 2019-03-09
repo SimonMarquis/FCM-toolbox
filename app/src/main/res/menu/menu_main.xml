@@ -29,6 +29,10 @@
         android:title="@string/menu_share_token"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_invalidate_token"
+        android:title="@string/menu_invalidate_token"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_delete_all"
         android:title="@string/menu_delete_all"
         app:showAsAction="never" />

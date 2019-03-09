@@ -1,7 +1,7 @@
 # FCM toolbox
 
 This public toolbox allows you to easily **test** and **debug** the [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) service.
-- Send and receive FCM payloads
+- Send and receive FCM messages
 - Manage registered devices
 - Self-hosting capabilities
 
@@ -14,8 +14,8 @@ This public toolbox allows you to easily **test** and **debug** the [Firebase Cl
 Download the latest public version on the [Play Store](https://play.google.com/store/apps/details?id=fr.smarquis.fcm) or choose your [release version](https://github.com/SimonMarquis/FCM-toolbox/releases).
 
 - Notify its presence and send its FCM token to a remote server
-- Issue a notification for each payload
-- Retain all received payload
+- Issue a notification for each message
+- Retain all received messages
 
 ![android_empty](art/android_empty.png) ![android_lis](art/android_list.png) ![android_notifications](art/android_notifications.png)
 

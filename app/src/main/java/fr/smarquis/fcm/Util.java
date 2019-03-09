@@ -19,32 +19,37 @@ package fr.smarquis.fcm;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Intent;
 import android.widget.Toast;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class Util {
 
-    static String printStackTrace(@NonNull Throwable exception) {
+    private static String printStackTrace(@NonNull Throwable exception) {
         StringWriter trace = new StringWriter();
         exception.printStackTrace(new PrintWriter(trace));
         return trace.toString();
     }
 
-    public static void copyToClipboard(Context context, CharSequence text) {
+    public static void copyToClipboard(@NonNull Context context, @Nullable CharSequence text) {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(null, text);
-        clipboard.setPrimaryClip(clip);
-        Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    static String safeReplaceToAlphanum(@Nullable String string) {
-        if (string == null) {
-            return null;
+    public static void safeStartActivity(@NonNull Context context, @Nullable Intent intent) {
+        try {
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, Util.printStackTrace(e), Toast.LENGTH_LONG).show();
         }
-        return string.replaceAll("[^a-zA-Z0-9]", "");
     }
 }

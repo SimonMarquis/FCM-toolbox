@@ -29,6 +29,7 @@ import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
  *
  * @see <a href="https://gist.github.com/JakeWharton/11274467">Source</a>
  */
+@SuppressWarnings("ALL")
 public class Truss {
 
     private final SpannableStringBuilder builder;

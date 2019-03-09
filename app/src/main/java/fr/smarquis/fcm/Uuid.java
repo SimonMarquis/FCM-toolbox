@@ -19,10 +19,11 @@ package fr.smarquis.fcm;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.UUID;
+
+import androidx.annotation.NonNull;
 
 final class Uuid {
 
