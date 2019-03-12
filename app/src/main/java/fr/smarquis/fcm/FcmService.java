@@ -42,7 +42,7 @@ public class FcmService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Message<Payload> message = Message.from(remoteMessage);
-        boolean silent = Boolean.valueOf(remoteMessage.getData().get("silent"));
+        boolean silent = Boolean.valueOf(remoteMessage.getData().get("hide"));
         new Handler(Looper.getMainLooper()).post(() -> notifyAndExecute(message, silent, this));
     }
 
