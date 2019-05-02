@@ -7,27 +7,29 @@
   <meta name="author" content="https://github.com/SimonMarquis">
   <meta name="description" content="Firebase Cloud Messaging toolbox">
   <meta name="keywords" content="FirebaseCloudMessaging,FCM,Android">
-  <link rel="shortcut icon" href="favicon.png">
+  <meta name="theme-color" content="#FF9800">
 
   <title>FCM toolbox</title>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="manifest" href="manifest.json">
+  <link href="favicon.png" rel="icon" type="image/x-icon" />
+  <link rel="icon" sizes="192x192" href="192.png">
+  <script defer src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/5.11.0/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/5.11.0/firebase-database.js"></script>
+  <script defer src="fcm-toolbox.js"></script>
   <link rel="stylesheet" href="fcm-toolbox.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-  <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-  <script defer src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-  <script defer src="fcm-toolbox.js"></script>
 </head>
 <body>
 
   <div class="container">
 
       <!-- Card -->
-      <div class="card bg-light">
+      <div class="card bg-light shadow">
 
         <!-- navbar -->
         <div class="card-header">
@@ -40,8 +42,8 @@
             <div class="collapse navbar-collapse" id="navbarToggler">
               <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link ml-3 text-secondary text-center" href="" data-toggle="modal" data-target="#tutorialModal" title="Tutorial"> <i class="material-icons align-middle">school</i></a>
-                <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://github.com/SimonMarquis/FCM-toolbox" title="GitHub" target="_blank"> <i class="material-icons align-middle">public</i></a>
-                <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" title="Play Store" target="_blank"> <i class="material-icons align-middle">shop</i></a>
+                <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://github.com/SimonMarquis/FCM-toolbox" title="GitHub" target="_blank" rel="noopener"> <i class="material-icons align-middle">public</i></a>
+                <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" title="Play Store" target="_blank" rel="noopener"> <i class="material-icons align-middle">shop</i></a>
                 <a class="nav-item nav-link ml-3 text-secondary text-center" href="" data-toggle="modal" data-target="#settings-modal" title="Settings"> <i class="material-icons align-middle">settings</i></a>
               </div>
             </div>
@@ -52,11 +54,11 @@
 
         <div class="card-header" role="tablist">
           <nav id="payload-type" class="nav nav-tabs card-header-tabs nav-fill">
-              <a class="text-secondary nav-item nav-link text-secondary active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i><span></span>Ping</a>
-              <a class="text-secondary nav-item nav-link text-secondary" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">message</i><span></span>Text</a>
-              <a class="text-secondary nav-item nav-link text-secondary" data-toggle="tab" href="#send-link" role="tab"><i class="material-icons align-middle">link</i><span></span>Link</a>
-              <a class="text-secondary nav-item nav-link text-secondary" data-toggle="tab" href="#send-app" role="tab"><i class="material-icons align-middle">shop</i><span></span>App</a>
-              <a class="text-secondary nav-item nav-link text-secondary" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i><span></span>Raw</a>
+              <a class="text-secondary nav-item nav-link active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i><span></span>Ping</a>
+              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">message</i><span></span>Text</a>
+              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-link" role="tab"><i class="material-icons align-middle">link</i><span></span>Link</a>
+              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-app" role="tab"><i class="material-icons align-middle">shop</i><span></span>App</a>
+              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i><span></span>Raw</a>
           </nav>
         </div>
 
@@ -143,7 +145,7 @@
         <div class="form-group row">
           <div class="col-sm-12">
             <div class="input-group">
-              <input class="form-control border-right-0" style="text-overflow: ellipsis;" type="text" value="" id="form-device-token" placeholder="Token">
+              <input class="form-control border-right-0" style="text-overflow: ellipsis;" type="text" value="" id="form-device-token" placeholder="Token…" aria-label="Token">
               <div class="input-group-append">
                 <label id="btn-device-token-alias" class="input-group-text"></label>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -153,8 +155,8 @@
                   <div id="list-device-users">
                   </div>
                 </div>
-                <button id="btn-add-device-token" type="button" class="btn btn-outline-secondary border-right-0" title="Add"><i class="material-icons align-middle">add</i></button>
-                <button id="btn-device-dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Search"><i class="material-icons align-middle md-24">search</i> </button>
+                <button id="btn-add-device-token" type="button" class="btn btn-outline-secondary py-1 border-right-0" title="Add"><i class="material-icons align-middle">add</i></button>
+                <button id="btn-device-dropdown" type="button" class="btn btn-outline-secondary py-1 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Search"><i class="material-icons align-middle md-24">search</i> </button>
               </div>
             </div>
           </div>
@@ -228,6 +230,7 @@
             </form>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-primary mr-auto" id="pwa" hidden>Install</button>
             <button type="button" class="btn btn-danger" id="btn-reset">Reset</button>
             <button type="button" class="btn btn-secondary" onclick="location.reload();">Reload</button>
           </div>

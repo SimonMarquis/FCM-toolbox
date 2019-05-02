@@ -12,13 +12,54 @@ var DEFAULT_APP_SETTINGS = {
     hide: false
 };
 
+var PWA;
+
 $(function() {
+    initServiceWorker();
+    initPWA();
     bind();
     initSettings();
     displayDeviceTokens();
     showDefaultDeviceToken();
     initFirebase();
 });
+
+
+function initServiceWorker() {
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+            .register("sw.js", { scope: "./" })
+            .then(function(registration) {
+                console.log("Service Worker Registered");
+            })
+            .catch(function(err) {
+                console.log("Service Worker Registration Failed: ", err);
+            });
+        navigator.serviceWorker.ready.then(function(registration) {
+            console.log("Service Worker Ready");
+        });
+    }
+}
+
+function initPWA() {
+    window.addEventListener("beforeinstallprompt", function(event) {
+        event.preventDefault();
+        PWA = event;
+        document.getElementById("pwa").removeAttribute("hidden");
+    });
+    window.addEventListener("appinstalled", function(event) {
+        hideSettings();
+    });
+    document.getElementById("pwa").addEventListener("click", function(event) {
+        PWA.prompt();
+        PWA.userChoice.then(function(result) {
+            console.log("PWA result:", result);
+            document.getElementById("pwa").setAttribute("hidden", "true");
+        });
+        event.preventDefault();
+        event.stopPropagation();
+    }, false);
+}
 
 Storage.prototype.setObject = function(key, value) {
     this.setItem(key, JSON.stringify(value));
@@ -110,6 +151,10 @@ function showSettingsIfNeeded() {
 
 function showSettings() {
     $("#settings-modal").modal("show");
+}
+
+function hideSettings() {
+    $("#settings-modal").modal("hide");
 }
 
 function bind() {
