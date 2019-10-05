@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,43 +26,44 @@
   <link rel="stylesheet" href="fcm-toolbox.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
+
 <body>
 
   <div class="container">
 
-      <!-- Card -->
-      <div class="card bg-light shadow">
+    <!-- Card -->
+    <div class="card bg-light shadow">
 
-        <!-- navbar -->
-        <div class="card-header">
-          <nav class="navbar navbar-expand-sm navbar-light rounded">
-            <i class="material-icons align-middle md-48" style="color: #FF9800;">whatshot</i>
-            <span class="navbar-brand text-muted ml-3">FCM toolbox</span>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggler">
-              <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link ml-3 text-secondary text-center" href="" data-toggle="modal" data-target="#tutorialModal" title="Tutorial"> <i class="material-icons align-middle">school</i></a>
-                <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://github.com/SimonMarquis/FCM-toolbox" title="GitHub" target="_blank" rel="noopener"> <i class="material-icons align-middle">public</i></a>
-                <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" title="Play Store" target="_blank" rel="noopener"> <i class="material-icons align-middle">shop</i></a>
-                <a class="nav-item nav-link ml-3 text-secondary text-center" href="" data-toggle="modal" data-target="#settings-modal" title="Settings"> <i class="material-icons align-middle">settings</i></a>
-              </div>
+      <!-- navbar -->
+      <div class="card-header">
+        <nav class="navbar navbar-expand-sm navbar-light rounded">
+          <i class="material-icons align-middle md-48" style="color: #FF9800;">whatshot</i>
+          <span class="navbar-brand text-muted ml-3">FCM toolbox</span>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggler">
+            <div class="navbar-nav ml-auto">
+              <a class="nav-item nav-link ml-3 text-secondary text-center" href="" data-toggle="modal" data-target="#tutorialModal" title="Tutorial"> <i class="material-icons align-middle">school</i></a>
+              <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://github.com/SimonMarquis/FCM-toolbox" title="GitHub" target="_blank" rel="noopener"> <i class="material-icons align-middle">public</i></a>
+              <a class="nav-item nav-link ml-3 text-secondary text-center" href="https://play.google.com/store/apps/details?id=fr.smarquis.fcm" title="Play Store" target="_blank" rel="noopener"> <i class="material-icons align-middle">shop</i></a>
+              <a class="nav-item nav-link ml-3 text-secondary text-center" href="" data-toggle="modal" data-target="#settings-modal" title="Settings"> <i class="material-icons align-middle">settings</i></a>
             </div>
+          </div>
 
-          </nav>
-        </div>
-        <!-- navbar -->
+        </nav>
+      </div>
+      <!-- navbar -->
 
-        <div class="card-header" role="tablist">
-          <nav id="payload-type" class="nav nav-tabs card-header-tabs nav-fill">
-              <a class="text-secondary nav-item nav-link active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i><span></span>Ping</a>
-              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">message</i><span></span>Text</a>
-              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-link" role="tab"><i class="material-icons align-middle">link</i><span></span>Link</a>
-              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-app" role="tab"><i class="material-icons align-middle">shop</i><span></span>App</a>
-              <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i><span></span>Raw</a>
-          </nav>
-        </div>
+      <div class="card-header" role="tablist">
+        <nav id="payload-type" class="nav nav-tabs card-header-tabs nav-fill">
+          <a class="text-secondary nav-item nav-link active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i><span></span>Ping</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">message</i><span></span>Text</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-link" role="tab"><i class="material-icons align-middle">link</i><span></span>Link</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-app" role="tab"><i class="material-icons align-middle">shop</i><span></span>App</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i><span></span>Raw</a>
+        </nav>
+      </div>
 
       <div id="forms" class="tab-content">
 
@@ -292,7 +294,8 @@
               <li>Select a <strong>type</strong> of payload to send</li>
               <li>Fill the corresponding <strong>input fields</strong></li>
               <li>Enter an device <strong>token</strong> or a <strong>topic</strong></li>
-              <li>Click the <button type="button" class="btn btn-sm btn-outline-primary"><b>Send</b></button> button or <kbd>Ctrl</kbd> + <kbd>&#9166;</kbd></li>
+              <li>Click the <button type="button" class="btn btn-sm btn-outline-primary"><b>Send</b></button> button or
+                <kbd>Ctrl</kbd> + <kbd>&#9166;</kbd></li>
             </ol>
           </div>
           <div class="modal-body">
@@ -305,7 +308,8 @@
             <ol>
               <li><strong>Download</strong> and <strong>launch</strong> the corresponding app on your device</li>
               <li>Open the device dropdown with <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"><i class="material-icons align-middle md-18">search</i></button></li>
-              <li>Click the <button type="button" class="btn btn-secondary btn-sm"><i class="material-icons align-middle md-18">add</i></button> button next to the corresponding device</li>
+              <li>Click the <button type="button" class="btn btn-secondary btn-sm"><i class="material-icons align-middle md-18">add</i></button> button next to the corresponding device
+              </li>
             </ol>
           </div>
         </div>
@@ -316,4 +320,5 @@
   </div> <!-- /container -->
 
 </body>
+
 </html>
