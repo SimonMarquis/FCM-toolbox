@@ -62,6 +62,10 @@ public final class ViewHolder extends RecyclerView.ViewHolder {
         button2.setOnClickListener(v -> execute(Action.SECONDARY, payload()));
         button3.setOnClickListener(v -> execute(Action.TERTIARY, payload()));
         itemView.setOnClickListener(v -> listener.onClick(message));
+        itemView.setOnLongClickListener(v -> {
+            listener.onClick(message);
+            return true;
+        });
     }
 
     @Nullable
