@@ -16,18 +16,26 @@
 
 package fr.smarquis.fcm;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,12 +45,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import fr.smarquis.fcm.payloads.Payload;
+
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
+import static android.widget.Toast.LENGTH_LONG;
 
 public class MainActivity extends AppCompatActivity implements Messages.Listener {
 
@@ -204,6 +218,45 @@ public class MainActivity extends AppCompatActivity implements Messages.Listener
                     }
                 });
                 break;
+            case R.id.action_topics:
+                // Extracted from com.google.firebase.messaging.FirebaseMessaging
+                Pattern pattern = Pattern.compile("[a-zA-Z0-9-_.~%]{1,900}");
+                @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.topics_dialog, null, false);
+                EditText input = view.findViewById(R.id.input);
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle(R.string.menu_topics)
+                        .setView(view)
+                        .setPositiveButton(R.string.topics_subscribe, (d, which) -> {
+                            String topic = input.getText().toString();
+                            FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                                    .addOnSuccessListener(this, success -> Toast.makeText(this, getString(R.string.topics_subscribed, topic), LENGTH_LONG).show())
+                                    .addOnFailureListener(this, error -> Toast.makeText(this, Util.printStackTrace(error), LENGTH_LONG).show());
+                        })
+                        .setNegativeButton(R.string.topics_unsubscribe, (d, which) -> {
+                            String topic = input.getText().toString();
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+                                    .addOnSuccessListener(this, success -> Toast.makeText(this, getString(R.string.topics_unsubscribed, topic), LENGTH_LONG).show())
+                                    .addOnFailureListener(this, error -> Toast.makeText(this, Util.printStackTrace(error), LENGTH_LONG).show());
+                        }).show();
+                input.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        boolean matches = pattern.matcher(s).matches();
+                        dialog.getButton(BUTTON_POSITIVE).setEnabled(matches);
+                        dialog.getButton(BUTTON_NEGATIVE).setEnabled(matches);
+                    }
+                });
+                // Trigger afterTextChanged()
+                input.setText(null);
+                return true;
             case R.id.action_delete_all:
                 Notifications.removeAll(this);
                 List<Message<Payload>> removedMessages = messages.get();

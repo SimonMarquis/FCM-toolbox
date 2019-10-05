@@ -30,7 +30,7 @@ import java.io.StringWriter;
 
 public class Util {
 
-    private static String printStackTrace(@NonNull Throwable exception) {
+    static String printStackTrace(@NonNull Throwable exception) {
         StringWriter trace = new StringWriter();
         exception.printStackTrace(new PrintWriter(trace));
         return trace.toString();

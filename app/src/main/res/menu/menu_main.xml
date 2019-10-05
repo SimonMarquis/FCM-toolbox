@@ -25,6 +25,10 @@
         android:title=""
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_topics"
+        android:title="@string/menu_topics"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_share_token"
         android:title="@string/menu_share_token"
         app:showAsAction="never" />

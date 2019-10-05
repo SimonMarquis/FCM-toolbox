@@ -31,7 +31,12 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="menu_share_token">Share token</string>
     <string name="menu_invalidate_token">Invalidate token</string>
+    <string name="menu_topics">Topics</string>
     <string name="menu_delete_all">Delete all</string>
     <string name="snackbar_item_deleted" tools:ignore="PluralsCandidate">%d deleted</string>
     <string name="snackbar_item_undo">Undo</string>
+    <string name="topics_subscribe">Subscribe</string>
+    <string name="topics_subscribed">Subscribed to topic: `%s`</string>
+    <string name="topics_unsubscribe">Unsubscribe</string>
+    <string name="topics_unsubscribed">Unsubscribed from topic: `%s`</string>
 </resources>
