@@ -5,10 +5,10 @@ import android.os.CountDownTimer;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 
-import java.util.concurrent.TimeUnit;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import java.util.concurrent.TimeUnit;
 
 public class TimeAgoTextView extends AppCompatTextView {
 

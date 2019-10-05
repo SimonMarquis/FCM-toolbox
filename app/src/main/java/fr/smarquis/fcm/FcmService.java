@@ -20,11 +20,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import androidx.annotation.UiThread;
-import androidx.annotation.WorkerThread;
 import fr.smarquis.fcm.payloads.Link;
 import fr.smarquis.fcm.payloads.Payload;
 import fr.smarquis.fcm.payloads.Text;

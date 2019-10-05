@@ -3,13 +3,14 @@ package fr.smarquis.fcm.payloads;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
 import com.squareup.moshi.Json;
 
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import fr.smarquis.fcm.Messages;
 import fr.smarquis.fcm.R;
 

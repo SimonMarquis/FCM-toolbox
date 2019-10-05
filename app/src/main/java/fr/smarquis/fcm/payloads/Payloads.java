@@ -1,5 +1,7 @@
 package fr.smarquis.fcm.payloads;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory;
@@ -9,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
 import fr.smarquis.fcm.Messages;
 
 public final class Payloads {

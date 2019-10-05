@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
 import fr.smarquis.fcm.payloads.Payload;
 
 final class Notifications {

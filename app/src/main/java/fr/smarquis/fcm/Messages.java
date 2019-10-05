@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -15,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import fr.smarquis.fcm.payloads.Payload;
 import fr.smarquis.fcm.payloads.Payloads;
 

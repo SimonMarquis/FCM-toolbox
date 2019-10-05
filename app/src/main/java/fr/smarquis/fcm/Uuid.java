@@ -20,10 +20,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import java.util.UUID;
-
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
+
+import java.util.UUID;
 
 final class Uuid {
 

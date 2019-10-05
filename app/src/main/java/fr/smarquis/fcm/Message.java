@@ -1,11 +1,12 @@
 package fr.smarquis.fcm;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.moshi.Json;
 
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import fr.smarquis.fcm.payloads.Payload;
 import fr.smarquis.fcm.payloads.Payloads;
 

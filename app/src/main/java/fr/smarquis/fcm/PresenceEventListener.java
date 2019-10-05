@@ -19,6 +19,8 @@ package fr.smarquis.fcm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,8 +35,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
 
 import static android.os.Build.MANUFACTURER;
 import static android.os.Build.MODEL;

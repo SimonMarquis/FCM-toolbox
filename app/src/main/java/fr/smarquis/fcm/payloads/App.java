@@ -9,11 +9,12 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 
-import com.squareup.moshi.Json;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import com.squareup.moshi.Json;
+
 import fr.smarquis.fcm.R;
 import fr.smarquis.fcm.Truss;
 
