@@ -18,12 +18,12 @@ package fr.smarquis.fcm;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 final class Uuid {
 
