@@ -9,10 +9,29 @@ var DEFAULT_APP_SETTINGS = {
     frd: {
         databaseUrl: "https://fir-cloudmessaging-4e2cd.firebaseio.com"
     },
+    fa: {
+        active: true,
+        apiKey: "AIzaSyBBd-gJUlg_HFdbWz6l90gJL2tHEm4itqY",
+        projectId: "fir-cloudmessaging-4e2cd",
+        appId: "1:322141800886:web:5cdb37ecedcc8c359d5917",
+        measurementId: "G-W942B55TP2"
+    },
     hide: false
 };
 
+var PAYLOAD_TYPES = {
+    PING: "ping",
+    TEXT: "text",
+    LINK: "link",
+    APP: "app",
+    RAW: "raw",
+    current: function() {
+        return $("#payload-type").find(".active[role=tab]").attr("href").substr("#send-".length);
+    }
+}
+
 var PWA;
+var analytics;
 
 $(function() {
     initServiceWorker();
@@ -74,8 +93,8 @@ Storage.prototype.getObject = function(key) {
     }
 };
 
-function getSettings(settings) {
-    return localStorage.getObject("settings") || DEFAULT_APP_SETTINGS;
+function getSettings() {
+    return $.extend(true, {}, DEFAULT_APP_SETTINGS, localStorage.getObject("settings"));
 }
 
 function setSettings(settings) {
@@ -142,7 +161,7 @@ function renderNotificationVisibility() {
 }
 
 function showSettingsIfNeeded() {
-    if (!getSettings().fcm.apiKey) {
+    if (!(getSettings().fcm || {}).apiKey) {
         showSettings();
         return true;
     }
@@ -262,12 +281,17 @@ function initSettings() {
     var fcmTtl = $("#settings-fcm-ttl");
     var fcmPriority = $("#settings-fcm-priority");
     var frdDatabaseUrl = $("#settings-frd-database-url");
+    var faGroup = $("#settings-fa");
+    var faSwitch = $("#settings-fa-switch");
+    var faApiKey = $("#settings-fa-api-key");
+    var faProjectId = $("#settings-fa-project-id");
+    var faAppId = $("#settings-fa-app-id");
+    var faMeasurementId = $("#settings-fa-measurement-id");
 
-    fcmApiKey.val(settings.fcm.apiKey);
+    fcmApiKey.val((settings.fcm || {}).apiKey);
     fcmApiKey.bind("input", function() {
         fcmApiKey.parent().change();
-        settings.fcm.apiKey = $(this).val();
-        setSettings(settings);
+        setSettings($.extend(true, getSettings(), { fcm: { apiKey: $(this).val() } }));
     });
     fcmApiKey.parent().bind("change", function() {
         if (fcmApiKey.val()) {
@@ -277,20 +301,43 @@ function initSettings() {
         }
     }).change();
 
-    fcmTtl.val(settings.fcm.ttl);
+    fcmTtl.val((settings.fcm || {}).ttl);
     fcmTtl.bind("input", function() {
-        settings.fcm.ttl = $(this).val();
-        setSettings(settings);
+        setSettings($.extend(true, getSettings(), { fcm: { ttl: $(this).val() } }));
     });
-    fcmPriority.val(settings.fcm.priority);
+    fcmPriority.val((settings.fcm || {}).priority);
     fcmPriority.bind("input", function() {
-        settings.fcm.priority = $(this).val();
-        setSettings(settings);
+        setSettings($.extend(true, getSettings(), { fcm: { priority: $(this).val() } }));
     });
-    frdDatabaseUrl.val(settings.frd.databaseUrl);
+    frdDatabaseUrl.val((settings.frd || {}).databaseUrl);
     frdDatabaseUrl.bind("input", function() {
-        settings.frd.databaseUrl = $(this).val();
-        setSettings(settings);
+        setSettings($.extend(true, getSettings(), { frd: { databaseUrl: $(this).val() } }));
+    });
+    faSwitch.prop('checked', Boolean((settings.fa || {}).active));
+    faSwitch.change(function() {
+        var isChecked = $(this).is(":checked");
+        setSettings($.extend(true, getSettings(), { fa: { active: isChecked } }));
+        if(isChecked) {
+            faGroup.show();
+        } else {
+            faGroup.hide();
+        }
+    }).change(); 
+    faApiKey.val((settings.fa || {}).apiKey);
+    faApiKey.bind("input", function() {
+        setSettings($.extend(true, getSettings(), { fa: { apiKey: $(this).val() } }));
+    });
+    faProjectId.val((settings.fa || {}).projectId);
+    faProjectId.bind("input", function() {
+        setSettings($.extend(true, getSettings(), { fa: { projectId: $(this).val() } }));
+    });
+    faAppId.val((settings.fa || {}).appId);
+    faAppId.bind("input", function() {
+        setSettings($.extend(true, getSettings(), { fa: { appId: $(this).val() } }));
+    });
+    faMeasurementId.val((settings.fa || {}).measurementId);
+    faMeasurementId.bind("input", function() {
+        setSettings($.extend(true, getSettings(), { fa: { measurementId: $(this).val() } }));
     });
 
     showSettingsIfNeeded();
@@ -300,14 +347,21 @@ function initSettings() {
 function initFirebase() {
     setFcmUsers(undefined);
     var settings = getSettings();
-    if (!settings.frd.databaseUrl) {
+    if (!(settings.frd || {}).databaseUrl) {
         return;
     }
 
     var config = {
-        databaseURL: settings.frd.databaseUrl
+        databaseURL: (settings.frd || {}).databaseUrl,
+        apiKey: (settings.fa || {}).apiKey,
+        projectId: (settings.fa || {}).projectId,
+        appId: (settings.fa || {}).appId,
+        measurementId: (settings.fa || {}).measurementId,
     };
     firebase.initializeApp(config);
+    if((settings.fa || {}).active) {
+        analytics = firebase.analytics();
+    }
     var devices = firebase.database().ref("devices");
     devices.on("value", function(snapshot) {
         var users = snapshot.val();
@@ -448,19 +502,19 @@ function triggerSendMessage() {
     if (showSettingsIfNeeded()) {
         return;
     }
-    var settings = getSettings();
-    var key = settings.fcm.apiKey;
     var payload = buildPayload();
+    var type = PAYLOAD_TYPES.current();
     $.ajax({
         url: "https://fcm.googleapis.com/fcm/send",
         type: "post",
         beforeSend: function(request) {
-            request.setRequestHeader("Authorization", "key=" + key);
+            request.setRequestHeader("Authorization", "key=" + (getSettings().fcm || {}).apiKey);
             request.setRequestHeader("Content-Type", "application/json");
         },
         data: JSON.stringify(payload),
         dataType: "json",
         success: function(data) {
+            analyticsLogSendMessage(type, true);
             var alert = $("<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>");
             alert.find("pre[data-request]").text(JSON.stringify(payload, null, 2));
             alert.find("pre[data-response]").text(JSON.stringify(data, null, 2));
@@ -471,6 +525,7 @@ function triggerSendMessage() {
             });
         },
         error: function(data) {
+            analyticsLogSendMessage(type, false);
             var alert = $("<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>");
             alert.find("pre[data-request]").text(JSON.stringify(payload, null, 2));
             alert.find("pre[data-response]").text(JSON.stringify(data, null, 2));
@@ -484,15 +539,11 @@ function triggerSendMessage() {
 }
 
 function buildPayload() {
-    var active = $("#payload-type").find(".active[role=tab]");
-    if (!active) {
-        return;
-    }
     var settings = getSettings();
 
     var token = findDeviceToken().val();
-    var ttl = parseInt(settings.fcm.ttl);
-    var priority = settings.fcm.priority;
+    var ttl = parseInt((settings.fcm || {}).ttl);
+    var priority = (settings.fcm || {}).priority;
 
     var payload = {
         to: token,
@@ -500,13 +551,13 @@ function buildPayload() {
         priority: priority
     };
 
-    switch (active.attr("href")) {
-        case "#send-ping":
+    switch (PAYLOAD_TYPES.current()) {
+        case PAYLOAD_TYPES.PING:
             payload.data = {
                 ping: {}
             };
             break;
-        case "#send-text":
+        case PAYLOAD_TYPES.TEXT:
             payload.data = {
                 text: {
                     title: $("#send-text-title").val(),
@@ -515,7 +566,7 @@ function buildPayload() {
                 }
             };
             break;
-        case "#send-link":
+        case PAYLOAD_TYPES.LINK:
             payload.data = {
                 link: {
                     title: $("#send-link-title").val(),
@@ -524,7 +575,7 @@ function buildPayload() {
                 }
             };
             break;
-        case "#send-app":
+        case PAYLOAD_TYPES.APP:
             payload.data = {
                 app: {
                     title: $("#send-app-title").val(),
@@ -532,7 +583,7 @@ function buildPayload() {
                 }
             };
             break;
-        case "#send-raw":
+        case PAYLOAD_TYPES.RAW:
             payload.data = JSON.parse($("#send-raw-data").val());
             break;
         default:
@@ -542,4 +593,13 @@ function buildPayload() {
         payload.data.hide = true;
     }
     return payload;
+}
+
+function analyticsLogSendMessage(type, success) {
+    if (analytics) {
+        analytics.logEvent("send_message", {
+            type: type,
+            success: success
+        });
+    }
 }

@@ -18,8 +18,9 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/5.11.0/firebase-app.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/5.11.0/firebase-database.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-database.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
   <script defer src="fcm-toolbox.js"></script>
   <link rel="stylesheet" href="fcm-toolbox.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -145,7 +146,7 @@
         <div class="form-group row">
           <div class="col-sm-12">
             <div class="input-group">
-              <input class="form-control border-right-0" style="text-overflow: ellipsis;" type="text" value="" id="form-device-token" placeholder="Token…" aria-label="Token">
+              <input class="form-control border-right-0" style="text-overflow: ellipsis;" type="text" value="" id="form-device-token" placeholder="Token or topic…" aria-label="Token">
               <div class="input-group-append">
                 <label id="btn-device-token-alias" class="input-group-text"></label>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -223,10 +224,46 @@
                 <label for="settings-frd-database-url" class="col-sm-3 col-form-label">Url</label>
                 <div class="col-sm-9">
                   <input class="form-control" type="text" value="" id="settings-frd-database-url" required>
-                  <small id="emailHelp" class="form-text text-muted">Modification requires a page reload</small>
+                  <small class="form-text text-muted">Modification requires a page reload</small>
                 </div>
               </div>
 
+              <hr>
+
+              <h5>Firebase Analytics <small class="text-muted">(Optional)</small>
+                <div class="custom-control custom-switch float-right">
+                  <input type="checkbox" class="custom-control-input" id="settings-fa-switch">
+                  <label class="custom-control-label" for="settings-fa-switch"></label>
+                </div>
+              </h5>
+              <small class="form-text text-muted">Modification requires a page reload</small>
+              <p></p>
+              <div id="settings-fa">
+                <div class="form-group row">
+                  <label for="settings-fa-api-key" class="col-sm-3 col-form-label">API Key</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="" id="settings-fa-api-key" required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="settings-fa-project-id" class="col-sm-3 col-form-label">Project ID</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="" id="settings-fa-project-id" required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="settings-fa-app-id" class="col-sm-3 col-form-label">App ID</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="" id="settings-fa-app-id" required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="settings-fa-measurement-id" class="col-sm-3 col-form-label">Meas. ID</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="" id="settings-fa-measurement-id" required>
+                  </div>
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
