@@ -422,6 +422,7 @@ function displayDeviceTokens() {
     list.append(
       $("<a href='' class='dropdown-item dropdown-item-action list-group-item-light'></a>")
         .attr("data-token", token.value)
+        .attr("title", timeago(token.timestamp))
         .text(token.label)
         .prepend("&nbsp;&nbsp;")
         .prepend(trash)
@@ -492,6 +493,7 @@ function displayConnectedDevices() {
     list.append(
       $("<a href='' class='dropdown-item dropdown-item-action list-group-item-light text-success'></a>")
         .attr("data-token", user.value)
+        .attr("title", timeago(user.timestamp))
         .text(user.label)
         .prepend("&nbsp;&nbsp;")
         .prepend(add)
@@ -635,3 +637,34 @@ function analyticsLogSendMessage(type, success) {
     });
   }
 }
+
+function timeago(time) {
+  var msPerSecond = 1000;
+  var msPerMinute = msPerSecond * 60;
+  var msPerHour = msPerMinute * 60;
+  var msPerDay = msPerHour * 24;
+  var msPerMonth = msPerDay * 30;
+  var msPerYear = msPerDay * 365;
+  var elapsed = Math.abs(Date.now() - time);
+  var future = Date.now() - time < 0;
+  if (Math.round(elapsed / msPerSecond) == 0) {
+    return "now";
+  }
+  var render = function(count, unit, future) {
+    return (future ? "in " : "") + count + unit + (count > 1 ? "s" : "") + (future ? "" : " ago");
+  };
+  if (elapsed < msPerMinute) {
+    return render(Math.round(elapsed / msPerSecond), " second", future);
+  } else if (elapsed < msPerHour) {
+    return render(Math.round(elapsed / msPerMinute), " minute", future);
+  } else if (elapsed < msPerDay) {
+    return render(Math.round(elapsed / msPerHour), " hour", future);
+  } else if (elapsed < msPerMonth) {
+    return render(Math.round(elapsed / msPerDay), " day", future);
+  } else if (elapsed < msPerYear) {
+    return render(Math.round(elapsed / msPerMonth), " month", future);
+  } else {
+    return render(Math.round(elapsed / msPerYear), " year", future);
+  }
+}
+
