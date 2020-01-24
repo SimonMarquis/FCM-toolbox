@@ -16,20 +16,20 @@
   ~ limitations under the License.
   -->
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
     android:layout_width="@dimen/item_responsive_width"
     android:layout_height="wrap_content"
-    android:foreground="?selectableItemBackground"
-    app:cardCornerRadius="@dimen/payload_item_card_corner_radius">
+    android:foreground="?selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_selector"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/selector_background">
+        android:background="@drawable/selector_background"
+        android:elevation="2dp"
+        tools:ignore="UnusedAttribute">
 
         <ImageView
             android:id="@+id/item_icon"
@@ -46,7 +46,7 @@
             tools:ignore="ContentDescription"
             tools:src="@drawable/ic_notifications_none_24dp" />
 
-        <fr.smarquis.fcm.TimeAgoTextView
+        <fr.smarquis.fcm.view.ui.TimeAgoTextView
             android:id="@+id/item_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,39 +102,32 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="item_text,item_raw" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/item_btn_1"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/unit_half"
+            android:layout_marginRight="@dimen/unit_half"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_barrier"
             tools:text="Button 1"
             tools:visibility="visible" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/item_btn_2"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/unit_half"
+            android:layout_marginRight="@dimen/unit_half"
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/item_btn_1"
             app:layout_constraintTop_toBottomOf="@+id/item_barrier"
             tools:text="Button 2"
             tools:visibility="visible" />
 
-        <Button
-            android:id="@+id/item_btn_3"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/item_btn_2"
-            app:layout_constraintTop_toBottomOf="@+id/item_barrier"
-            tools:text="Button 3"
-            tools:visibility="visible" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</FrameLayout>

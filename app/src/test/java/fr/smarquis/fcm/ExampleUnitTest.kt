@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package fr.smarquis.fcm
 
-package fr.smarquis.fcm;
+import org.junit.Assert
+import org.junit.Test
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-
-import static fr.smarquis.fcm.Util.copyToClipboard;
-
-public class CopyToClipboardActivity extends Activity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        copyToClipboard(this, getIntent().getCharSequenceExtra(Intent.EXTRA_TEXT));
-        finish();
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * @see [Testing documentation](http://d.android.com/tools/testing)
+ */
+class ExampleUnitTest {
+    @Test
+    fun addition_isCorrect() {
+        Assert.assertEquals(4, 2 + 2.toLong())
     }
 }

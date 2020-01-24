@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package fr.smarquis.fcm.view.ui
 
-package fr.smarquis.fcm;
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import fr.smarquis.fcm.utils.copyToClipboard
 
-import org.junit.Test;
+class CopyToClipboardActivity : Activity() {
 
-import static org.junit.Assert.*;
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-public class ExampleUnitTest {
-
-    @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        copyToClipboard(intent.getCharSequenceExtra(Intent.EXTRA_TEXT))
+        finish()
     }
+
 }
