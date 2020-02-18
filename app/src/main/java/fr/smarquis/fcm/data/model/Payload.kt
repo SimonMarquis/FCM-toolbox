@@ -89,6 +89,7 @@ sealed class Payload {
             @Json(name = "url")
             private val url: String? = null,
             @Json(name = "open")
+            @Deprecated(message = "Since Android 10, starting an Activity from background has been disabled https://developer.android.com/guide/components/activities/background-starts")
             val open: Boolean = false
     ) : Payload() {
 
@@ -101,9 +102,7 @@ sealed class Payload {
                 bold { append("title: ") }
                 append("$title\n")
                 bold { append("url: ") }
-                append("$url\n")
-                bold { append("open: ") }
-                append(open.toString())
+                append("$url")
             }
         }
 

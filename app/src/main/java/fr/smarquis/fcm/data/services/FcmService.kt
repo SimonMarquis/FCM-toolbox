@@ -22,7 +22,10 @@ import com.google.firebase.messaging.RemoteMessage
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
 import fr.smarquis.fcm.data.repository.MessageRepository
-import fr.smarquis.fcm.utils.*
+import fr.smarquis.fcm.utils.Notifications
+import fr.smarquis.fcm.utils.asMessage
+import fr.smarquis.fcm.utils.copyToClipboard
+import fr.smarquis.fcm.utils.uiHandler
 import fr.smarquis.fcm.viewmodel.PresenceLiveData
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -51,7 +54,6 @@ class FcmService : FirebaseMessagingService() {
         }
         val payload = message.payload
         when {
-            payload is Payload.Link && payload.open -> safeStartActivity(payload.intent())
             payload is Payload.Text && payload.clipboard -> applicationContext.copyToClipboard(payload.text)
         }
     }

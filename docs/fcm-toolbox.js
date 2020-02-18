@@ -604,8 +604,7 @@ function buildPayload() {
       payload.data = {
         link: {
           title: $("#send-link-title").val(),
-          url: $("#send-link-url").val(),
-          open: $("#send-link-url-open").is(":checked")
+          url: $("#send-link-url").val()
         }
       };
       break;
