@@ -133,6 +133,11 @@ sealed class Payload {
 
         @SuppressLint("RestrictedApi")
         override fun configure(builder: Builder): Builder = builder.apply { setContentTitle(mContext.getString(R.string.payload_ping)) }
+
+        override fun equals(other: Any?): Boolean = if (other is Ping) true else super.equals(other)
+
+        override fun hashCode(): Int = 0
+
     }
 
     data class Text(
