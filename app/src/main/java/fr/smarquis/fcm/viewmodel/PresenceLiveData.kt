@@ -34,10 +34,16 @@ class PresenceLiveData(application: Application) : LiveData<Presence>(Presence()
 
     fun fetchToken() = GlobalScope.launch(Dispatchers.Main) {
         val token = withContext(Dispatchers.IO) {
-            Tasks.await(instanceId.instanceId).token
+            try {
+                Tasks.await(instanceId.instanceId).token
+            } catch (e: Exception) {
+                e.message
+            }
         }
         value = value.copy(token = token)
-        connectionRef.setValue(payload(token))
+        token?.let {
+            connectionRef.setValue(payload(it))
+        }
     }
 
     fun resetToken() = GlobalScope.launch(Dispatchers.Main) {
