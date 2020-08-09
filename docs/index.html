@@ -57,18 +57,28 @@
 
       <div class="card-header" role="tablist">
         <nav id="payload-type" class="nav nav-tabs card-header-tabs nav-fill">
-          <a class="text-secondary nav-item nav-link active" data-toggle="tab" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i><span></span>Ping</a>
-          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-text" role="tab"><i class="material-icons align-middle">message</i><span></span>Text</a>
-          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-link" role="tab"><i class="material-icons align-middle">link</i><span></span>Link</a>
-          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-app" role="tab"><i class="material-icons align-middle">shop</i><span></span>App</a>
-          <a class="text-secondary nav-item nav-link" data-toggle="tab" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i><span></span>Raw</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" data-value="ping" href="#send-ping" role="tab"><i class="material-icons align-middle">notifications_none</i><span></span>Ping</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" data-value="text" href="#send-text" role="tab"><i class="material-icons align-middle">message</i><span></span>Text</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" data-value="link" href="#send-link" role="tab"><i class="material-icons align-middle">link</i><span></span>Link</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" data-value="app" href="#send-app" role="tab"><i class="material-icons align-middle">shop</i><span></span>App</a>
+          <a class="text-secondary nav-item nav-link" data-toggle="tab" data-value="raw" href="#send-raw" role="tab"><i class="material-icons align-middle">code</i><span></span>Raw</a>
         </nav>
       </div>
 
       <div id="forms" class="tab-content">
 
+        <!-- Loading -->
+        <div class="card-body tab-pane show active" id="loading" role="tabpanel">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-grow text-secondary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <!-- Loading -->
+
         <!-- Ping -->
-        <div class="card-body tab-pane fade show active" id="send-ping" role="tabpanel">
+        <div class="card-body tab-pane fade show" id="send-ping" role="tabpanel">
           <p class="card-text">Test the reachability of a device</p>
         </div>
         <!-- Ping -->

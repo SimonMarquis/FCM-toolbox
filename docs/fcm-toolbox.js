@@ -25,11 +25,8 @@ var PAYLOAD_TYPES = {
   LINK: "link",
   APP: "app",
   RAW: "raw",
-  current: function() {
-    return $("#payload-type")
-      .find(".active[role=tab]")
-      .attr("href")
-      .substr("#send-".length);
+  current: function () {
+    return $("#payload-type").find(".active[role=tab]").attr("data-value");
   }
 };
 
@@ -288,6 +285,14 @@ function bind() {
       addBtn.show();
     }
   });
+  $("#payload-type > [data-toggle=tab]").on("shown.bs.tab", function (event) {
+    window.location.hash = $(event.target).attr("href").substr(1);
+  });
+  var tab = $("#payload-type").find("[href='" + window.location.hash + "']");
+  if (tab.length == 0) {
+    tab = $("#payload-type").find("[data-value='" + PAYLOAD_TYPES.PING + "']");
+  }
+  tab.tab("show");
 }
 
 function initSettings() {
