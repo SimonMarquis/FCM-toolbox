@@ -33,7 +33,7 @@ var PAYLOAD_TYPES = {
 var PWA;
 var analytics;
 
-$(function() {
+$(function () {
   initServiceWorker();
   initPWA();
   bind();
@@ -47,32 +47,32 @@ function initServiceWorker() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("sw.js", { scope: "./" })
-      .then(function(registration) {
+      .then(function (registration) {
         console.log("Service Worker Registered");
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log("Service Worker Registration Failed: ", err);
       });
-    navigator.serviceWorker.ready.then(function(registration) {
+    navigator.serviceWorker.ready.then(function (registration) {
       console.log("Service Worker Ready");
     });
   }
 }
 
 function initPWA() {
-  window.addEventListener("beforeinstallprompt", function(event) {
+  window.addEventListener("beforeinstallprompt", function (event) {
     event.preventDefault();
     PWA = event;
     document.getElementById("pwa").removeAttribute("hidden");
   });
-  window.addEventListener("appinstalled", function(event) {
+  window.addEventListener("appinstalled", function (event) {
     hideSettings();
   });
   document.getElementById("pwa").addEventListener(
     "click",
-    function(event) {
+    function (event) {
       PWA.prompt();
-      PWA.userChoice.then(function(result) {
+      PWA.userChoice.then(function (result) {
         console.log("PWA result:", result);
         document.getElementById("pwa").setAttribute("hidden", "true");
       });
@@ -83,11 +83,11 @@ function initPWA() {
   );
 }
 
-Storage.prototype.setObject = function(key, value) {
+Storage.prototype.setObject = function (key, value) {
   this.setItem(key, JSON.stringify(value));
 };
 
-Storage.prototype.getObject = function(key) {
+Storage.prototype.getObject = function (key) {
   var value = this.getItem(key);
   try {
     return value && JSON.parse(value);
@@ -188,24 +188,24 @@ function hideSettings() {
 }
 
 function bind() {
-  $("body").keydown(function(e) {
+  $("body").keydown(function (e) {
     if (e.ctrlKey && e.keyCode === 13) {
       triggerSendMessage();
     }
   });
-  $("#btn-reset").click(function(event) {
+  $("#btn-reset").click(function (event) {
     resetAndReload();
     $(this).blur();
   });
-  $("#btn-visibility").click(function() {
+  $("#btn-visibility").click(function () {
     $(this).blur();
     toggleNotificationVisibility();
   });
-  $("#btn-send").click(function() {
+  $("#btn-send").click(function () {
     $(this).blur();
     triggerSendMessage();
   });
-  $("#btn-add-device-token").click(function() {
+  $("#btn-add-device-token").click(function () {
     $(this).blur();
     var name = prompt("Enter a name for this device token");
     if (name != null && name) {
@@ -213,7 +213,7 @@ function bind() {
       $("#form-device-token").change();
     }
   });
-  $("#send-raw-data").bind("input propertychange change", function() {
+  $("#send-raw-data").bind("input propertychange change", function () {
     var element = $(this);
     try {
       $.parseJSON(element.val());
@@ -223,7 +223,7 @@ function bind() {
     }
   });
   $("#send-raw-data")
-    .focusout(function() {
+    .focusout(function () {
       var element = $(this);
       try {
         var json = JSON.stringify(JSON.parse(element.val()), undefined, 4);
@@ -234,7 +234,7 @@ function bind() {
     })
     .val(getLastRawData() || JSON.stringify({ key: "value" }, undefined, 4))
     .change();
-  $("#form-device-token").bind("input change", function() {
+  $("#form-device-token").bind("input change", function () {
     var element = $(this);
     var currentToken = element.val();
     setLastDeviceToken(currentToken);
@@ -246,13 +246,13 @@ function bind() {
     aliasBtn.empty();
 
     var isConnectedUser = false;
-    $.each(getFcmUsers(), function(index, user) {
+    $.each(getFcmUsers(), function (index, user) {
       if (user.value === currentToken) {
         isConnectedUser = true;
       }
     });
 
-    $.each([element, aliasBtn], function(i, l) {
+    $.each([element, aliasBtn], function (i, l) {
       if (isConnectedUser) {
         l.addClass("list-group-item-success");
       } else {
@@ -265,7 +265,7 @@ function bind() {
       addBtn.prop("disabled", false);
       sendBtn.prop("disabled", false);
 
-      $.each(getDeviceTokens(), function(index, token) {
+      $.each(getDeviceTokens(), function (index, token) {
         if (token.value === currentToken) {
           aliasBtn.text(token.label);
           return false;
@@ -309,13 +309,13 @@ function initSettings() {
   var faMeasurementId = $("#settings-fa-measurement-id");
 
   fcmApiKey.val((settings.fcm || {}).apiKey);
-  fcmApiKey.bind("input", function() {
+  fcmApiKey.bind("input", function () {
     fcmApiKey.parent().change();
     setSettings($.extend(true, getSettings(), { fcm: { apiKey: $(this).val() } }));
   });
   fcmApiKey
     .parent()
-    .bind("change", function() {
+    .bind("change", function () {
       if (fcmApiKey.val()) {
         fcmApiKey.removeClass("is-invalid");
       } else {
@@ -325,20 +325,20 @@ function initSettings() {
     .change();
 
   fcmTtl.val((settings.fcm || {}).ttl);
-  fcmTtl.bind("input", function() {
+  fcmTtl.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fcm: { ttl: $(this).val() } }));
   });
   fcmPriority.val((settings.fcm || {}).priority);
-  fcmPriority.bind("input", function() {
+  fcmPriority.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fcm: { priority: $(this).val() } }));
   });
   frdDatabaseUrl.val((settings.frd || {}).databaseUrl);
-  frdDatabaseUrl.bind("input", function() {
+  frdDatabaseUrl.bind("input", function () {
     setSettings($.extend(true, getSettings(), { frd: { databaseUrl: $(this).val() } }));
   });
   faSwitch.prop("checked", Boolean((settings.fa || {}).active));
   faSwitch
-    .change(function() {
+    .change(function () {
       var isChecked = $(this).is(":checked");
       setSettings($.extend(true, getSettings(), { fa: { active: isChecked } }));
       if (isChecked) {
@@ -349,19 +349,19 @@ function initSettings() {
     })
     .change();
   faApiKey.val((settings.fa || {}).apiKey);
-  faApiKey.bind("input", function() {
+  faApiKey.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fa: { apiKey: $(this).val() } }));
   });
   faProjectId.val((settings.fa || {}).projectId);
-  faProjectId.bind("input", function() {
+  faProjectId.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fa: { projectId: $(this).val() } }));
   });
   faAppId.val((settings.fa || {}).appId);
-  faAppId.bind("input", function() {
+  faAppId.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fa: { appId: $(this).val() } }));
   });
   faMeasurementId.val((settings.fa || {}).measurementId);
-  faMeasurementId.bind("input", function() {
+  faMeasurementId.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fa: { measurementId: $(this).val() } }));
   });
 
@@ -388,10 +388,10 @@ function initFirebase() {
     analytics = firebase.analytics();
   }
   var devices = firebase.database().ref("devices");
-  devices.on("value", function(snapshot) {
+  devices.on("value", function (snapshot) {
     var users = snapshot.val();
     var items = [];
-    $.each(snapshot.val() || [], function(key, user) {
+    $.each(snapshot.val() || [], function (key, user) {
       if (user.token) {
         items.push({
           timestamp: user.timestamp,
@@ -400,7 +400,7 @@ function initFirebase() {
         });
       }
     });
-    items.sort(function(a, b) {
+    items.sort(function (a, b) {
       return a.timestamp - b.timestamp;
     });
     setFcmUsers(items);
@@ -418,9 +418,9 @@ function showDefaultDeviceToken() {
 function displayDeviceTokens() {
   var list = findDeviceTokenList();
   list.empty();
-  $.each(getDeviceTokens(), function(index, token) {
+  $.each(getDeviceTokens(), function (index, token) {
     var trash = $("<i class='material-icons align-middle'>clear</i>");
-    trash.click(function(event) {
+    trash.click(function (event) {
       removeDeviceToken(token);
       $("#form-device-token").change();
       event.preventDefault();
@@ -442,18 +442,14 @@ function displayDeviceTokens() {
 function bindDeviceTokens() {
   findDeviceTokenList()
     .find("a.dropdown-item-action")
-    .click(function(event) {
-      findDeviceToken()
-        .val($(this).attr("data-token"))
-        .change();
+    .click(function (event) {
+      findDeviceToken().val($(this).attr("data-token")).change();
       event.preventDefault();
     });
   findDeviceUserList()
     .find("a.dropdown-item-action")
-    .click(function(event) {
-      findDeviceToken()
-        .val($(this).attr("data-token"))
-        .change();
+    .click(function (event) {
+      findDeviceToken().val($(this).attr("data-token")).change();
       event.preventDefault();
     });
   updateDevicesAndUsersStatus();
@@ -468,7 +464,7 @@ function addDeviceToken(value, label) {
       timestamp: Date.now()
     };
     tokens.push(newToken);
-    tokens.sort(function(a, b) {
+    tokens.sort(function (a, b) {
       return a.timestamp - b.timestamp;
     });
     setDeviceTokens(tokens);
@@ -478,7 +474,7 @@ function addDeviceToken(value, label) {
 
 function removeDeviceToken(token) {
   var tokens = getDeviceTokens();
-  var grep = $.grep(tokens, function(t, index) {
+  var grep = $.grep(tokens, function (t, index) {
     return t.value !== token.value;
   });
   setDeviceTokens(grep);
@@ -489,9 +485,9 @@ function displayConnectedDevices() {
   var users = getFcmUsers();
   var list = findDeviceUserList();
   list.empty();
-  users.forEach(function(user, index) {
+  users.forEach(function (user, index) {
     var add = $("<i class='material-icons align-middle'>add</i>");
-    add.click(function(event) {
+    add.click(function (event) {
       addDeviceToken(user.value, user.label);
       $("#form-device-token").change();
       event.preventDefault();
@@ -517,7 +513,7 @@ function updateDevicesAndUsersStatus() {
   tokens.find("a.dropdown-item").removeClass("text-success");
   devices.find("a.dropdown-item").show();
 
-  $.each(getFcmUsers(), function(index, user) {
+  $.each(getFcmUsers(), function (index, user) {
     var userListedAsToken = tokens.find("a.dropdown-item[data-token='" + user.value + "']");
     var userListedAsDevice = devices.find("a.dropdown-item[data-token='" + user.value + "']");
     if (userListedAsToken && userListedAsToken.length > 0) {
@@ -544,13 +540,13 @@ function triggerSendMessage() {
   $.ajax({
     url: "https://fcm.googleapis.com/fcm/send",
     type: "post",
-    beforeSend: function(request) {
+    beforeSend: function (request) {
       request.setRequestHeader("Authorization", "key=" + (getSettings().fcm || {}).apiKey);
       request.setRequestHeader("Content-Type", "application/json");
     },
     data: JSON.stringify(payload),
     dataType: "json",
-    success: function(data) {
+    success: function (data) {
       analyticsLogSendMessage(type, true);
       var alert = $(
         "<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
@@ -559,11 +555,11 @@ function triggerSendMessage() {
       alert.find("pre[data-response]").text(JSON.stringify(data, null, 2));
       $("#alert-container").prepend(alert);
       alert.slideDown();
-      alert.delay(10000).fadeOut(function() {
+      alert.delay(10000).fadeOut(function () {
         alert.remove();
       });
     },
-    error: function(data) {
+    error: function (data) {
       analyticsLogSendMessage(type, false);
       var alert = $(
         "<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
@@ -572,7 +568,7 @@ function triggerSendMessage() {
       alert.find("pre[data-response]").text(JSON.stringify(data, null, 2));
       $("#alert-container").prepend(alert);
       alert.slideDown();
-      alert.delay(20000).fadeOut(function() {
+      alert.delay(20000).fadeOut(function () {
         alert.remove();
       });
     }
@@ -656,7 +652,7 @@ function timeago(time) {
   if (Math.round(elapsed / msPerSecond) == 0) {
     return "now";
   }
-  var render = function(count, unit, future) {
+  var render = function (count, unit, future) {
     return (future ? "in " : "") + count + unit + (count > 1 ? "s" : "") + (future ? "" : " ago");
   };
   if (elapsed < msPerMinute) {
@@ -673,4 +669,3 @@ function timeago(time) {
     return render(Math.round(elapsed / msPerYear), " year", future);
   }
 }
-
