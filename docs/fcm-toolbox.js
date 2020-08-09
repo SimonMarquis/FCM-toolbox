@@ -131,6 +131,14 @@ function setFcmUsers(users) {
   localStorage.setObject("fcm_users", users);
 }
 
+function getLastRawData() {
+  return localStorage.getObject("raw_data");
+}
+
+function setLastRawData(data) {
+  return localStorage.setObject("raw_data", data);
+}
+
 function findDeviceToken() {
   return $("#form-device-token");
 }
@@ -221,19 +229,13 @@ function bind() {
     .focusout(function() {
       var element = $(this);
       try {
-        element.val(JSON.stringify(JSON.parse(element.val()), undefined, 4));
+        var json = JSON.stringify(JSON.parse(element.val()), undefined, 4);
+        element.val(json);
         element.attr("rows", Math.max(3, (element.val().match(/\n/g) || []).length + 1));
+        setLastRawData(json);
       } catch (err) {}
     })
-    .val(
-      JSON.stringify(
-        {
-          key: "value"
-        },
-        undefined,
-        4
-      )
-    )
+    .val(getLastRawData() || JSON.stringify({ key: "value" }, undefined, 4))
     .change();
   $("#form-device-token").bind("input change", function() {
     var element = $(this);
