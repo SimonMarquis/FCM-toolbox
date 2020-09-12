@@ -384,7 +384,7 @@ function initFirebase() {
     measurementId: (settings.fa || {}).measurementId
   };
   firebase.initializeApp(config);
-  if ((settings.fa || {}).active) {
+  if ((settings.fa || {}).active && typeof firebase.analytics == 'function') {
     analytics = firebase.analytics();
   }
   var devices = firebase.database().ref("devices");

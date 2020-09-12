@@ -1,6 +1,6 @@
 "use strict";
 
-const cacheName = "fcm-1.1.2";
+const cacheName = "fcm-1.1.3";
 
 self.addEventListener("install", event => {
   event.waitUntil(
