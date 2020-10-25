@@ -10,12 +10,15 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.annotation.Keep
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.google.firebase.messaging.RemoteMessage
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import fr.smarquis.fcm.R
 import fr.smarquis.fcm.view.ui.CopyToClipboardActivity
@@ -23,6 +26,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.io.IOException
 
+@Keep
 sealed class Payload {
 
     @IdRes
@@ -35,17 +39,19 @@ sealed class Payload {
 
     abstract fun configure(builder: Builder): Builder
 
+    @JsonClass(generateAdapter = true)
     data class App(
             @Json(name = "title")
-            private val title: String? = null,
+            internal val title: String? = null,
             @Json(name = "package")
-            private val packageName: String? = null
+            internal val packageName: String? = null
     ) : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_app
 
         override fun icon(): Int = R.drawable.ic_shop_24dp
 
+        @delegate:Transient
         private val display: CharSequence by lazy {
             buildSpannedString {
                 bold { append("title: ") }
@@ -83,20 +89,22 @@ sealed class Payload {
 
     }
 
+    @JsonClass(generateAdapter = true)
     data class Link(
             @Json(name = "title")
-            private val title: String? = null,
+            internal val title: String? = null,
             @Json(name = "url")
-            private val url: String? = null,
+            internal val url: String? = null,
             @Json(name = "open")
             @Deprecated(message = "Since Android 10, starting an Activity from background has been disabled https://developer.android.com/guide/components/activities/background-starts")
-            val open: Boolean = false
+            internal val open: Boolean = false
     ) : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_link
 
         override fun icon(): Int = R.drawable.ic_link_24dp
 
+        @delegate:Transient
         private val display: CharSequence by lazy {
             buildSpannedString {
                 bold { append("title: ") }
@@ -123,6 +131,7 @@ sealed class Payload {
     }
 
     @Suppress("CanSealedSubClassBeObject")
+    @JsonClass(generateAdapter = true)
     class Ping : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_ping
@@ -140,19 +149,21 @@ sealed class Payload {
 
     }
 
+    @JsonClass(generateAdapter = true)
     data class Text(
             @Json(name = "title")
-            private val title: String? = null,
+            internal val title: String? = null,
             @Json(name = "message")
-            val text: String? = null,
+            internal val text: String? = null,
             @Json(name = "clipboard")
-            val clipboard: Boolean = false
+            internal val clipboard: Boolean = false
     ) : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_text
 
         override fun icon(): Int = R.drawable.ic_chat_24dp
 
+        @delegate:Transient
         private val display: CharSequence by lazy {
             buildSpannedString {
                 bold { append("title: ") }
@@ -178,15 +189,17 @@ sealed class Payload {
 
     }
 
+    @JsonClass(generateAdapter = true)
     data class Raw(
             @Json(name = "data")
-            private val data: Map<String, String>? = null
+            internal val data: Map<String, String>? = null
     ) : Payload(), KoinComponent {
 
         override fun notificationId(): Int = R.id.notification_id_raw
 
         override fun icon(): Int = R.drawable.ic_code_24dp
 
+        @delegate:Transient
         private val display: CharSequence by lazy {
             moshi.adapter<Map<*, *>>(MutableMap::class.java).indent("  ").toJson(data)
         }
@@ -218,6 +231,8 @@ sealed class Payload {
                     if (payload != null) {
                         return payload
                     }
+                } catch (e: JsonDataException) {
+                    e.printStackTrace()
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

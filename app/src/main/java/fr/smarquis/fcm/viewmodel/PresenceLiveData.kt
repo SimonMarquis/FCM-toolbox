@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Build.MANUFACTURER
 import android.os.Build.MODEL
 import androidx.lifecycle.LiveData
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import fr.smarquis.fcm.data.model.Presence
@@ -13,6 +12,7 @@ import fr.smarquis.fcm.utils.uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.Locale.ROOT
 
@@ -35,7 +35,7 @@ class PresenceLiveData(application: Application) : LiveData<Presence>(Presence()
     fun fetchToken() = GlobalScope.launch(Dispatchers.Main) {
         val token = withContext(Dispatchers.IO) {
             try {
-                Tasks.await(instanceId.instanceId).token
+                instanceId.instanceId.await().token
             } catch (e: Exception) {
                 e.message
             }

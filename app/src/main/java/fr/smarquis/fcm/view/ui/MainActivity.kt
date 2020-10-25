@@ -33,7 +33,6 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -62,8 +61,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.presence.observe(this, Observer { updatePresence(it) })
-        viewModel.messages.observe(this, Observer { updateMessages(it) })
+        viewModel.presence.observe(this, ::updatePresence)
+        viewModel.messages.observe(this, ::updateMessages)
 
         messagesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

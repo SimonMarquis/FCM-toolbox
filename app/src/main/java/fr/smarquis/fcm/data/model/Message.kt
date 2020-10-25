@@ -1,10 +1,12 @@
 package fr.smarquis.fcm.data.model
 
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
+@Keep
 data class Message(
         @PrimaryKey
         @ColumnInfo(name = "messageId") val messageId: String,
