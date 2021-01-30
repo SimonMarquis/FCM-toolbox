@@ -1,7 +1,8 @@
+import java.util.*
+
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
 }
 
@@ -29,11 +30,18 @@ android {
             }
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true
@@ -49,27 +57,27 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
+    implementation(Kotlin.stdlib.jdk7)
 
     /* AndroidX */
-    implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.2")
-    implementation("androidx.core:core-ktx:1.5.0-alpha04")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    implementation("androidx.preference:preference-ktx:1.1.1")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha06")
-    implementation("androidx.transition:transition:1.3.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
+    implementation(AndroidX.appCompat)
+    implementation(AndroidX.constraintLayout)
+    implementation(AndroidX.core.ktx)
+    implementation(AndroidX.lifecycle.liveDataKtx)
+    implementation(AndroidX.lifecycle.viewModelKtx)
+    implementation(AndroidX.preferenceKtx)
+    implementation(AndroidX.recyclerView)
+    implementation(AndroidX.transition)
+    androidTestImplementation(AndroidX.test.espresso.core)
+    androidTestImplementation(AndroidX.test.ext.junit)
 
     /* Material Design */
-    implementation("com.google.android.material:material:1.3.0-alpha03")
+    implementation(Google.Android.material)
 
     /* Firebase */
-    implementation("com.google.firebase:firebase-core:17.5.1")
-    implementation("com.google.firebase:firebase-messaging:20.3.0")
-    implementation("com.google.firebase:firebase-database:19.5.1")
+    implementation(platform(Firebase.bom))
+    implementation(Firebase.cloudMessaging)
+    implementation(Firebase.realtimeDatabase)
 
     /* Koin: Dependency Injection */
     val koin = "2.1.6"
@@ -80,26 +88,28 @@ dependencies {
     androidTestImplementation("org.koin:koin-test:$koin")
 
     /* Moshi: JSON parsing */
-    val moshi = "1.11.0"
-    implementation("com.squareup.moshi:moshi-adapters:$moshi")
-    implementation("com.squareup.moshi:moshi-kotlin:$moshi")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
+    implementation(Square.moshi)
+    implementation(Square.moshi.kotlinReflect)
+    kapt(Square.moshi.kotlinCodegen)
+    implementation("com.squareup.moshi:moshi-adapters:${
+        file("${rootDir}/versions.properties").inputStream().use {
+            Properties().apply { load(it) }.getProperty("version.moshi")
+        }
+    }")
 
     /* Room: SQLite persistence */
-    val room = "2.2.5"
-    implementation("androidx.room:room-runtime:$room")
-    kapt("androidx.room:room-compiler:$room")
-    implementation("androidx.room:room-ktx:$room")
-    testImplementation("androidx.room:room-testing:$room")
+    implementation(AndroidX.room.runtime)
+    kapt(AndroidX.room.compiler)
+    implementation(AndroidX.room.ktx)
+    testImplementation(AndroidX.room.testing)
 
     /* Kotlin Coroutines */
-    val coroutines = "1.4.0-M1"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines")
+    implementation(KotlinX.coroutines.core)
+    implementation(KotlinX.coroutines.android)
+    implementation(KotlinX.coroutines.playServices)
 
     /* JUnit */
-    testImplementation("junit:junit:4.13.1")
+    testImplementation(Testing.junit4)
 
 }
 

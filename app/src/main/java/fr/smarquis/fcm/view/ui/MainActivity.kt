@@ -15,24 +15,21 @@
  */
 package fr.smarquis.fcm.view.ui
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
-import android.widget.EditText
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -40,12 +37,13 @@ import com.google.firebase.messaging.FirebaseMessaging
 import fr.smarquis.fcm.R
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Presence
+import fr.smarquis.fcm.databinding.ActivityMainBinding
+import fr.smarquis.fcm.databinding.TopicsDialogBinding
 import fr.smarquis.fcm.utils.Notifications.removeAll
 import fr.smarquis.fcm.utils.asString
 import fr.smarquis.fcm.utils.safeStartActivity
 import fr.smarquis.fcm.view.adapter.MessagesAdapter
 import fr.smarquis.fcm.viewmodel.MessagesViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -53,13 +51,15 @@ import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     private val viewModel: MessagesViewModel by viewModel()
 
     private val messagesAdapter: MessagesAdapter = MessagesAdapter(get())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(ActivityMainBinding.inflate(layoutInflater).also { binding = it }.root)
 
         viewModel.presence.observe(this, ::updatePresence)
         viewModel.messages.observe(this, ::updateMessages)
@@ -68,10 +68,10 @@ class MainActivity : AppCompatActivity() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
                 if (positionStart != 0 || itemCount > 1) return
-                recycler_view.post { recycler_view.smoothScrollToPosition(0) }
+                binding.recyclerView.post { binding.recyclerView.smoothScrollToPosition(0) }
             }
         })
-        recycler_view.apply {
+        binding.recyclerView.apply {
             setHasFixedSize(true)
             val horizontal = resources.getDimensionPixelSize(R.dimen.unit_4)
             val vertical = resources.getDimensionPixelSize(R.dimen.unit_1)
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val message = messagesAdapter.getItem(viewHolder.adapterPosition)
                     viewModel.delete(message)
-                    Snackbar.make(recycler_view, getString(R.string.snackbar_item_deleted, 1), Snackbar.LENGTH_LONG).setAction(R.string.snackbar_item_undo) {
+                    Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, 1), Snackbar.LENGTH_LONG).setAction(R.string.snackbar_item_undo) {
                         viewModel.insert(message)
                     }.show()
                 }
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateMessages(messages: List<Message>) {
         messagesAdapter.submitList(messages) {
-            empty_view.visibility = if (messagesAdapter.itemCount > 0) INVISIBLE else VISIBLE
+            binding.emptyView.visibility = if (messagesAdapter.itemCount > 0) INVISIBLE else VISIBLE
             invalidateOptionsMenu()
         }
     }
@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(R.string.dialog_delete_all_positive) { _: DialogInterface?, _: Int ->
                     viewModel.delete(*messages)
                     removeAll(this)
-                    Snackbar.make(recycler_view, getString(R.string.snackbar_item_deleted, messages.size), TimeUnit.SECONDS.toMillis(10).toInt())
+                    Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, messages.size), TimeUnit.SECONDS.toMillis(10).toInt())
                             .setAction(R.string.snackbar_item_undo) { viewModel.insert(*messages) }
                             .show()
                 }
@@ -161,35 +161,30 @@ class MainActivity : AppCompatActivity() {
     private fun showTopicsDialog() {
         // Extracted from com.google.firebase.messaging.FirebaseMessaging
         val pattern = Pattern.compile("[a-zA-Z0-9-_.~%]{1,900}")
-        @SuppressLint("InflateParams") val view = LayoutInflater.from(this).inflate(R.layout.topics_dialog, null, false)
-        val input = view.findViewById<EditText>(R.id.dialog_input_value)
         val messaging = FirebaseMessaging.getInstance()
+        val binding = TopicsDialogBinding.inflate(LayoutInflater.from(this), null, false)
         val dialog = AlertDialog.Builder(this)
-                .setView(view)
+                .setView(binding.root)
                 .setPositiveButton(R.string.topics_subscribe) { _: DialogInterface?, _: Int ->
-                    val topic = input.text.toString()
+                    val topic = binding.inputText.text.toString()
                     messaging.subscribeToTopic(topic)
                             .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_subscribed, topic), LENGTH_LONG).show() }
                             .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
                 }
                 .setNegativeButton(R.string.topics_unsubscribe) { _: DialogInterface?, _: Int ->
-                    val topic = input.text.toString()
+                    val topic = binding.inputText.text.toString()
                     messaging.unsubscribeFromTopic(topic)
                             .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_unsubscribed, topic), LENGTH_LONG).show() }
                             .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
                 }.show()
-        input.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                val matches = pattern.matcher(s).matches()
-                dialog.getButton(BUTTON_POSITIVE).isEnabled = matches
-                dialog.getButton(BUTTON_NEGATIVE).isEnabled = matches
-            }
-        })
+        binding.inputText.doAfterTextChanged { editable ->
+            val matches = editable?.let(pattern::matcher)?.matches() ?: false
+            dialog.getButton(BUTTON_POSITIVE).isEnabled = matches
+            dialog.getButton(BUTTON_NEGATIVE).isEnabled = matches
+        }
         // Trigger afterTextChanged()
-        input.text = null
-        input.requestFocus()
+        binding.inputText.text = null
+        binding.inputText.requestFocus()
     }
 
 }

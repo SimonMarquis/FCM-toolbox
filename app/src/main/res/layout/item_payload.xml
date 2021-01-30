@@ -24,7 +24,7 @@
     android:foreground="?selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/item_selector"
+        android:id="@+id/selector"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/selector_background"
@@ -32,7 +32,7 @@
         tools:ignore="UnusedAttribute">
 
         <ImageView
-            android:id="@+id/item_icon"
+            android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/unit_1"
@@ -47,21 +47,21 @@
             tools:src="@drawable/ic_notifications_none_24dp" />
 
         <fr.smarquis.fcm.view.ui.TimeAgoTextView
-            android:id="@+id/item_timestamp"
+            android:id="@+id/timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/unit_1"
             android:layout_marginRight="@dimen/unit_1"
             android:lines="1"
             android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/item_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/icon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/item_icon"
+            app:layout_constraintTop_toTopOf="@+id/icon"
             tools:ignore="SmallSp"
             tools:text="3 min. ago" />
 
         <TextView
-            android:id="@+id/item_raw"
+            android:id="@+id/raw"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/unit_1"
@@ -75,13 +75,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_icon"
+            app:layout_constraintTop_toBottomOf="@+id/icon"
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="UnusedAttribute"
             tools:text="@tools:sample/lorem" />
 
         <TextView
-            android:id="@+id/item_text"
+            android:id="@+id/text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/unit_1"
@@ -92,20 +92,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_icon"
+            app:layout_constraintTop_toBottomOf="@+id/icon"
             app:layout_constraintVertical_bias="0.0"
             tools:text="@tools:sample/lorem"
             tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/item_barrier"
+            android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="item_text,item_raw" />
+            app:constraint_referenced_ids="text,raw" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/item_btn_1"
+            android:id="@+id/buttonPrimary"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,12 +114,12 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_barrier"
+            app:layout_constraintTop_toBottomOf="@+id/barrier"
             tools:text="Button 1"
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/item_btn_2"
+            android:id="@+id/buttonSecondary"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -127,8 +127,8 @@
             android:layout_marginRight="@dimen/unit_half"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_btn_1"
-            app:layout_constraintTop_toBottomOf="@+id/item_barrier"
+            app:layout_constraintEnd_toStartOf="@+id/buttonPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/barrier"
             tools:text="Button 2"
             tools:visibility="visible" />
 

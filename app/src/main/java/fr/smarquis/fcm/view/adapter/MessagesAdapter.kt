@@ -17,13 +17,10 @@ package fr.smarquis.fcm.view.adapter
 
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +28,7 @@ import com.squareup.moshi.Moshi
 import fr.smarquis.fcm.R
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
+import fr.smarquis.fcm.databinding.ItemPayloadBinding
 import fr.smarquis.fcm.utils.copyToClipboard
 import fr.smarquis.fcm.utils.safeStartActivity
 import fr.smarquis.fcm.view.adapter.MessagesAdapter.Action.PRIMARY
@@ -48,11 +46,8 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
         private val selection: androidx.collection.ArrayMap<String, Boolean> = androidx.collection.ArrayMap()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_payload, parent, false)
-        return ViewHolder(view, ::toggle)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            ViewHolder(ItemPayloadBinding.inflate(LayoutInflater.from(parent.context), parent, false), ::toggle)
 
     private fun toggle(message: Message, viewHolder: ViewHolder) {
         selection[message.messageId] = !(selection[message.messageId] ?: false)
@@ -61,7 +56,8 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
 
     public override fun getItem(position: Int): Message = super.getItem(position)
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) = viewHolder.onBind(getItem(position), selection[getItem(position).messageId] ?: false)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) = viewHolder.onBind(getItem(position), selection[getItem(position).messageId]
+            ?: false)
 
     override fun onViewRecycled(holder: ViewHolder) = holder.onUnbind()
 
@@ -69,24 +65,18 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
         PRIMARY, SECONDARY
     }
 
-    inner class ViewHolder(itemView: View, private val listener: (Message, ViewHolder) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(private val binding: ItemPayloadBinding, private val listener: (Message, ViewHolder) -> Unit) : RecyclerView.ViewHolder(binding.root) {
 
         private var message: Message? = null
         private var selected = false
 
-        private val icon: ImageView = itemView.findViewById(R.id.item_icon)
-        private val timestamp: TimeAgoTextView = itemView.findViewById(R.id.item_timestamp)
-        private val raw: TextView = itemView.findViewById(R.id.item_raw)
-        private val text: TextView = itemView.findViewById(R.id.item_text)
-        private val button1: Button = itemView.findViewById(R.id.item_btn_1)
-        private val button2: Button = itemView.findViewById(R.id.item_btn_2)
-        private val selector: View = itemView.findViewById(R.id.item_selector)
-
         init {
-            button1.setOnClickListener { execute(PRIMARY, payload()) }
-            button2.setOnClickListener { execute(SECONDARY, payload()) }
-            itemView.setOnClickListener { message?.let { listener(it, this) } }
-            itemView.setOnLongClickListener { message?.let { listener(it, this) }.let { true } }
+            with(binding) {
+                buttonPrimary.setOnClickListener { execute(PRIMARY, payload()) }
+                buttonSecondary.setOnClickListener { execute(SECONDARY, payload()) }
+                root.setOnClickListener { message?.let { listener(it, this@ViewHolder) } }
+                root.setOnLongClickListener { message?.let { listener(it, this@ViewHolder) }.let { true } }
+            }
         }
 
         private fun payload(): Payload? = message?.payload
@@ -100,29 +90,27 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
                         SECONDARY -> context.safeStartActivity(payload.uninstall())
                     }
                 }
-                is Payload.Link -> {
-                    if (action == PRIMARY) {
-                        context.safeStartActivity(payload.intent())
-                    }
+                is Payload.Link -> if (action == PRIMARY) context.safeStartActivity(payload.intent())
+                is Payload.Text -> if (action == PRIMARY) context.copyToClipboard(payload.text)
+                is Payload.Ping -> {
                 }
-                is Payload.Text -> {
-                    if (action == PRIMARY) {
-                        context.copyToClipboard(payload.text)
-                    }
+                is Payload.Raw -> {
+                }
+                null -> {
                 }
             }
         }
 
-        fun onBind(message: Message, selected: Boolean) {
-            this.message = message
-            this.selected = selected
+        fun onBind(message: Message, selected: Boolean) = with(binding) {
+            this@ViewHolder.message = message
+            this@ViewHolder.selected = selected
             icon.setImageResource(message.payload?.icon() ?: 0)
             timestamp.timestamp = min(message.sentTime, System.currentTimeMillis())
             renderContent()
             renderButtons()
         }
 
-        private fun renderContent() {
+        private fun renderContent() = with(binding) {
             selector.isActivated = selected
             if (selected) {
                 text.text = null
@@ -141,10 +129,10 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
             }
         }
 
-        private fun renderButtons() {
+        private fun renderButtons() = with(binding) {
             mapOf(
-                    PRIMARY to button1,
-                    SECONDARY to button2
+                    PRIMARY to buttonPrimary,
+                    SECONDARY to buttonSecondary
             ).forEach { (action, button) ->
                 render(action, button, message?.payload)
             }
@@ -170,20 +158,19 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
                         }
                     }
                 }
-                is Payload.Link -> {
-                    if (action == PRIMARY) {
-                        button.visibility = VISIBLE
-                        button.setText(R.string.payload_link_open)
-                        return
-                    }
+                is Payload.Link -> if (action == PRIMARY) {
+                    button.visibility = VISIBLE
+                    button.setText(R.string.payload_link_open)
+                    return
                 }
-                is Payload.Text -> {
-                    if (action == PRIMARY) {
-                        button.visibility = VISIBLE
-                        button.setText(R.string.payload_text_copy)
-                        return
-                    }
+                is Payload.Text -> if (action == PRIMARY) {
+                    button.visibility = VISIBLE
+                    button.setText(R.string.payload_text_copy)
+                    return
                 }
+                is Payload.Ping -> {}
+                is Payload.Raw -> {}
+                null -> {}
             }
             button.visibility = GONE
             button.text = null
@@ -191,7 +178,7 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
 
         fun onUnbind() {
             message = null
-            timestamp.timestamp = TimeAgoTextView.NO_TIMESTAMP
+            binding.timestamp.timestamp = TimeAgoTextView.NO_TIMESTAMP
         }
     }
 
