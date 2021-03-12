@@ -10,7 +10,7 @@ import fr.smarquis.fcm.data.model.Payload
 import fr.smarquis.fcm.data.repository.MessageRepository
 import fr.smarquis.fcm.viewmodel.MessagesViewModel
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val main = module {

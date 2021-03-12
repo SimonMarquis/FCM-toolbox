@@ -80,12 +80,10 @@ dependencies {
     implementation(Firebase.realtimeDatabase)
 
     /* Koin: Dependency Injection */
-    val koin = "2.1.6"
-    implementation("org.koin:koin-android:$koin")
-    implementation("org.koin:koin-android-scope:$koin")
-    implementation("org.koin:koin-android-viewmodel:$koin")
-    testImplementation("org.koin:koin-test:$koin")
-    androidTestImplementation("org.koin:koin-test:$koin")
+    val koin = "3.0.1-beta-1"
+    implementation("io.insert-koin:koin-android:$koin")
+    testImplementation("io.insert-koin:koin-test:$koin")
+    androidTestImplementation("io.insert-koin:koin-test:$koin")
 
     /* Moshi: JSON parsing */
     implementation(Square.moshi)

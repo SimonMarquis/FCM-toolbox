@@ -10,8 +10,8 @@ import fr.smarquis.fcm.data.db.AppDatabase.MapConverter
 import fr.smarquis.fcm.data.db.AppDatabase.PayloadConverter
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 @Database(entities = [Message::class], version = 1)
 @TypeConverters(value = [MapConverter::class, PayloadConverter::class])

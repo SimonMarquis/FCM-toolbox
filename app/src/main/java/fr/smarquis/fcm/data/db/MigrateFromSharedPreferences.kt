@@ -11,8 +11,8 @@ import fr.smarquis.fcm.data.repository.MessageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.get
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 
 class MigrateFromSharedPreferences(private val application: Application, private val moshi: Moshi) : RoomDatabase.Callback(), KoinComponent {

@@ -45,7 +45,7 @@ import fr.smarquis.fcm.utils.safeStartActivity
 import fr.smarquis.fcm.view.adapter.MessagesAdapter
 import fr.smarquis.fcm.viewmodel.MessagesViewModel
 import org.koin.android.ext.android.get
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 

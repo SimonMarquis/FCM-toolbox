@@ -22,8 +22,8 @@ import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import fr.smarquis.fcm.R
 import fr.smarquis.fcm.view.ui.CopyToClipboardActivity
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.IOException
 
 @Keep
