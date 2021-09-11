@@ -1,3 +1,4 @@
+import de.fayard.refreshVersions.core.versionFor
 import java.util.*
 
 plugins {
@@ -12,11 +13,11 @@ val versionPatch = 3
 val versionBuild = 0
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     defaultConfig {
         applicationId = "fr.smarquis.fcm"
-        minSdkVersion(16)
-        targetSdkVersion(30)
+        minSdk = 16
+        targetSdk = 30
         versionCode = versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -34,31 +35,20 @@ android {
         viewBinding = true
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
     testOptions {
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-    kotlinOptions {
-        jvmTarget = "1.8"
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
     }
 }
 
 dependencies {
-    implementation(Kotlin.stdlib.jdk7)
-
     /* AndroidX */
     implementation(AndroidX.appCompat)
     implementation(AndroidX.constraintLayout)
@@ -81,19 +71,16 @@ dependencies {
 
     /* Koin: Dependency Injection */
     val koin = "3.0.1-beta-1"
-    implementation("io.insert-koin:koin-android:$koin")
-    testImplementation("io.insert-koin:koin-test:$koin")
-    androidTestImplementation("io.insert-koin:koin-test:$koin")
+    implementation(Koin.android)
+    testImplementation(Koin.test)
+    androidTestImplementation(Koin.test)
 
     /* Moshi: JSON parsing */
     implementation(Square.moshi)
     implementation(Square.moshi.kotlinReflect)
     kapt(Square.moshi.kotlinCodegen)
-    implementation("com.squareup.moshi:moshi-adapters:${
-        file("${rootDir}/versions.properties").inputStream().use {
-            Properties().apply { load(it) }.getProperty("version.moshi")
-        }
-    }")
+    versionFor(Square.moshi)
+    implementation("com.squareup.moshi:moshi-adapters:${versionFor(Square.moshi)}")
 
     /* Room: SQLite persistence */
     implementation(AndroidX.room.runtime)

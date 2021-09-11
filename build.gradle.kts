@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:_")
         classpath("com.android.tools.build:gradle:_")
-        classpath("com.google.gms:google-services:_")
+        classpath(Google.playServicesGradlePlugin)
     }
 }
 
@@ -17,6 +17,6 @@ allprojects {
     }
 }
 
-tasks.register("clean", Delete::class) {
+tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }

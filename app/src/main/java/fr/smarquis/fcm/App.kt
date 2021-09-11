@@ -1,6 +1,6 @@
 package fr.smarquis.fcm
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import fr.smarquis.fcm.di.database
 import fr.smarquis.fcm.di.json
 import fr.smarquis.fcm.di.main
@@ -9,7 +9,7 @@ import org.koin.core.context.startKoin
 
 
 @Suppress("unused")
-class App : MultiDexApplication() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
