@@ -34,7 +34,7 @@
 
         <activity
             android:name=".view.ui.MainActivity"
-            android:label="@string/app_name"
+            android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -45,8 +45,8 @@
         </activity>
 
         <service
-            android:name=".data.services.FcmService"
-            tools:ignore="ExportedService">
+            android:name="fr.smarquis.fcm.services.FcmService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

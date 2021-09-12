@@ -17,13 +17,13 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/action_presence"
-        android:enabled="false"
-        android:icon="@android:drawable/presence_invisible"
         android:title=""
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        tools:icon="@android:drawable/presence_invisible" />
     <item
         android:id="@+id/action_topics"
         android:title="@string/menu_topics"

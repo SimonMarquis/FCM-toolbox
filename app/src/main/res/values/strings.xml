@@ -43,4 +43,6 @@
     <string name="topics_subscribed">Subscribed to topic: `%s`</string>
     <string name="topics_unsubscribe">Unsubscribe</string>
     <string name="topics_unsubscribed">Unsubscribed from topic: `%s`</string>
+    <string name="presence_online">Online</string>
+    <string name="presence_offline">Offline</string>
 </resources>

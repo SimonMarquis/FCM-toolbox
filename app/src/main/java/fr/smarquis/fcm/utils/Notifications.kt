@@ -2,10 +2,12 @@ package fr.smarquis.fcm.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
 import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.M
 import android.os.Build.VERSION_CODES.O
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat.*
@@ -35,7 +37,7 @@ object Notifications {
         }
         return Builder(context, context.getString(R.string.notification_channel_id))
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0))
+                .setContentIntent(getActivity(context, 0, Intent(context, MainActivity::class.java), if (SDK_INT >= M) FLAG_IMMUTABLE else 0))
                 .setLocalOnly(true)
                 .setAutoCancel(true)
                 .setDefaults(DEFAULT_ALL)

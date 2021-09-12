@@ -51,7 +51,7 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
 
     private fun toggle(message: Message, viewHolder: ViewHolder) {
         selection[message.messageId] = !(selection[message.messageId] ?: false)
-        notifyItemChanged(viewHolder.adapterPosition)
+        notifyItemChanged(viewHolder.bindingAdapterPosition)
     }
 
     public override fun getItem(position: Int): Message = super.getItem(position)

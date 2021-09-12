@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.smarquis.fcm.data.services
+package fr.smarquis.fcm.services
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import fr.smarquis.fcm.usecase.UpdateTokenUseCase
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
 import fr.smarquis.fcm.data.repository.MessageRepository
@@ -26,7 +27,6 @@ import fr.smarquis.fcm.utils.Notifications
 import fr.smarquis.fcm.utils.asMessage
 import fr.smarquis.fcm.utils.copyToClipboard
 import fr.smarquis.fcm.utils.uiHandler
-import fr.smarquis.fcm.viewmodel.PresenceLiveData
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import java.lang.Boolean.parseBoolean
@@ -34,10 +34,10 @@ import java.lang.Boolean.parseBoolean
 class FcmService : FirebaseMessagingService() {
 
     private val repository: MessageRepository by inject()
+    private val updateToken: UpdateTokenUseCase by inject()
 
-    override fun onNewToken(token: String) {
-        PresenceLiveData.instance(application).fetchToken()
-    }
+    @WorkerThread
+    override fun onNewToken(token: String) = runBlocking { updateToken(token) }
 
     @WorkerThread
     override fun onMessageReceived(remoteMessage: RemoteMessage) {

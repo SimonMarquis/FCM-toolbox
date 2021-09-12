@@ -1,5 +1,4 @@
 import de.fayard.refreshVersions.core.versionFor
-import java.util.*
 
 plugins {
     id("com.android.application")
@@ -70,7 +69,6 @@ dependencies {
     implementation(Firebase.realtimeDatabase)
 
     /* Koin: Dependency Injection */
-    val koin = "3.0.1-beta-1"
     implementation(Koin.android)
     testImplementation(Koin.test)
     androidTestImplementation(Koin.test)

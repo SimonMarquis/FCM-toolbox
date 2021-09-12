@@ -23,12 +23,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -37,13 +36,14 @@ import com.google.firebase.messaging.FirebaseMessaging
 import fr.smarquis.fcm.R
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Presence
+import fr.smarquis.fcm.data.model.Token
 import fr.smarquis.fcm.databinding.ActivityMainBinding
 import fr.smarquis.fcm.databinding.TopicsDialogBinding
-import fr.smarquis.fcm.utils.Notifications.removeAll
+import fr.smarquis.fcm.utils.Notifications
 import fr.smarquis.fcm.utils.asString
 import fr.smarquis.fcm.utils.safeStartActivity
 import fr.smarquis.fcm.view.adapter.MessagesAdapter
-import fr.smarquis.fcm.viewmodel.MessagesViewModel
+import fr.smarquis.fcm.viewmodel.MainViewModel
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel: MessagesViewModel by viewModel()
+    private val viewModel: MainViewModel by viewModel()
 
     private val messagesAdapter: MessagesAdapter = MessagesAdapter(get())
 
@@ -61,8 +61,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(ActivityMainBinding.inflate(layoutInflater).also { binding = it }.root)
 
-        viewModel.presence.observe(this, ::updatePresence)
+        viewModel.token.observe(this, ::updateToken)
         viewModel.messages.observe(this, ::updateMessages)
+        viewModel.presence.observe(this, ::updatePresence)
 
         messagesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -80,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val message = messagesAdapter.getItem(viewHolder.adapterPosition)
+                    val message = messagesAdapter.getItem(viewHolder.bindingAdapterPosition)
                     viewModel.delete(message)
                     Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, 1), Snackbar.LENGTH_LONG).setAction(R.string.snackbar_item_undo) {
                         viewModel.insert(message)
@@ -89,27 +90,36 @@ class MainActivity : AppCompatActivity() {
             }).attachToRecyclerView(this)
             adapter = messagesAdapter
         }
-
     }
 
     private fun updateMessages(messages: List<Message>) {
         messagesAdapter.submitList(messages) {
-            binding.emptyView.visibility = if (messagesAdapter.itemCount > 0) INVISIBLE else VISIBLE
+            binding.emptyView.isInvisible = messagesAdapter.itemCount > 0
             invalidateOptionsMenu()
         }
     }
 
     private fun updatePresence(presence: Presence) {
-        supportActionBar?.subtitle = when (presence.token) {
-            null -> getString(R.string.fetching)
-            else -> presence.token
+        if (presence is Presence.Error) {
+            Toast.makeText(this, presence.message(), LENGTH_LONG).show()
+        }
+        invalidateOptionsMenu()
+    }
+
+    private fun updateToken(token: Token) {
+        supportActionBar?.subtitle = when (token) {
+            Token.Loading -> getString(R.string.fetching)
+            is Token.Success -> token.value
+            is Token.Failure -> token.exception.message?.also {
+                Toast.makeText(this, it, LENGTH_LONG).show()
+            }
         }
         invalidateOptionsMenu()
     }
 
     override fun onResume() {
         super.onResume()
-        removeAll(this)
+        Notifications.removeAll(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -118,16 +128,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_presence).setIcon(if (viewModel.presence.value.connected) android.R.drawable.presence_online else android.R.drawable.presence_invisible)
-        menu.findItem(R.id.action_share_token).isVisible = !viewModel.presence.value.token.isNullOrEmpty()
+        menu.findItem(R.id.action_presence).apply {
+            title = viewModel.presence.value.message()
+            setIcon((viewModel.presence.value ?: Presence.Offline).icon)
+        }
+        menu.findItem(R.id.action_share_token).isEnabled = !(viewModel.token.value as? Token.Success)?.value.isNullOrEmpty()
         menu.findItem(R.id.action_delete_all).isVisible = messagesAdapter.itemCount > 0
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_share_token -> shareToken()
-            R.id.action_invalidate_token -> viewModel.presence.resetToken()
+            R.id.action_presence -> Toast.makeText(this, viewModel.presence.value.message(), LENGTH_LONG).show()
+            R.id.action_share_token -> (viewModel.token.value as? Token.Success)?.let { shareToken(it) }
+            R.id.action_invalidate_token -> viewModel.resetToken()
             R.id.action_topics -> showTopicsDialog()
             R.id.action_delete_all -> showDeleteDialog()
         }
@@ -137,23 +151,22 @@ class MainActivity : AppCompatActivity() {
     private fun showDeleteDialog() {
         val messages = messagesAdapter.currentList.toTypedArray<Message>()
         AlertDialog.Builder(this)
-                .setMessage(getString(R.string.dialog_delete_all_title, messages.size))
-                .setPositiveButton(R.string.dialog_delete_all_positive) { _: DialogInterface?, _: Int ->
-                    viewModel.delete(*messages)
-                    removeAll(this)
-                    Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, messages.size), TimeUnit.SECONDS.toMillis(10).toInt())
-                            .setAction(R.string.snackbar_item_undo) { viewModel.insert(*messages) }
-                            .show()
-                }
-                .setNegativeButton(R.string.dialog_delete_all_negative) { _: DialogInterface?, _: Int -> }
-                .show()
+            .setMessage(getString(R.string.dialog_delete_all_title, messages.size))
+            .setPositiveButton(R.string.dialog_delete_all_positive) { _: DialogInterface?, _: Int ->
+                viewModel.delete(*messages)
+                Notifications.removeAll(this)
+                Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, messages.size), TimeUnit.SECONDS.toMillis(10).toInt())
+                    .setAction(R.string.snackbar_item_undo) { viewModel.insert(*messages) }
+                    .show()
+            }
+            .setNegativeButton(R.string.dialog_delete_all_negative) { _: DialogInterface?, _: Int -> }
+            .show()
     }
 
-    private fun shareToken() {
-        val token = viewModel.presence.value.token ?: return
+    private fun shareToken(token: Token.Success) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, token)
+            putExtra(Intent.EXTRA_TEXT, token.value)
         }
         safeStartActivity(Intent.createChooser(intent, getString(R.string.menu_share_token)))
     }
@@ -164,19 +177,19 @@ class MainActivity : AppCompatActivity() {
         val messaging = FirebaseMessaging.getInstance()
         val binding = TopicsDialogBinding.inflate(LayoutInflater.from(this), null, false)
         val dialog = AlertDialog.Builder(this)
-                .setView(binding.root)
-                .setPositiveButton(R.string.topics_subscribe) { _: DialogInterface?, _: Int ->
-                    val topic = binding.inputText.text.toString()
-                    messaging.subscribeToTopic(topic)
-                            .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_subscribed, topic), LENGTH_LONG).show() }
-                            .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
-                }
-                .setNegativeButton(R.string.topics_unsubscribe) { _: DialogInterface?, _: Int ->
-                    val topic = binding.inputText.text.toString()
-                    messaging.unsubscribeFromTopic(topic)
-                            .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_unsubscribed, topic), LENGTH_LONG).show() }
-                            .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
-                }.show()
+            .setView(binding.root)
+            .setPositiveButton(R.string.topics_subscribe) { _: DialogInterface?, _: Int ->
+                val topic = binding.inputText.text.toString()
+                messaging.subscribeToTopic(topic)
+                    .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_subscribed, topic), LENGTH_LONG).show() }
+                    .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
+            }
+            .setNegativeButton(R.string.topics_unsubscribe) { _: DialogInterface?, _: Int ->
+                val topic = binding.inputText.text.toString()
+                messaging.unsubscribeFromTopic(topic)
+                    .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_unsubscribed, topic), LENGTH_LONG).show() }
+                    .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
+            }.show()
         binding.inputText.doAfterTextChanged { editable ->
             val matches = editable?.let(pattern::matcher)?.matches() ?: false
             dialog.getButton(BUTTON_POSITIVE).isEnabled = matches
@@ -185,6 +198,12 @@ class MainActivity : AppCompatActivity() {
         // Trigger afterTextChanged()
         binding.inputText.text = null
         binding.inputText.requestFocus()
+    }
+
+    private fun Presence?.message() = when (this) {
+        Presence.Offline, null -> getString(R.string.presence_offline)
+        Presence.Online -> getString(R.string.presence_online)
+        is Presence.Error -> error.message
     }
 
 }
