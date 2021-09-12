@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
+import fr.smarquis.fcm.BuildConfig
 import fr.smarquis.fcm.data.model.Presence
 import fr.smarquis.fcm.data.model.Presence.*
 import fr.smarquis.fcm.data.model.Token
@@ -76,6 +77,7 @@ class PresenceLiveData(
             is Token.Success -> token.value
             Token.Loading, is Token.Failure, null -> null
         },
+        "version" to BuildConfig.VERSION_CODE,
         "timestamp" to ServerValue.TIMESTAMP
     )
 

@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "devices": {
+      ".read": true,
+      ".write": true,
+      "$uuid": {
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "timestamp": {
+          ".validate": "newData.isNumber()"
+        },
+        "token": {
+          ".validate": "newData.isString()"
+        },
+        "version": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "$other": {
+      ".validate": false
+    }
+  }
+}
