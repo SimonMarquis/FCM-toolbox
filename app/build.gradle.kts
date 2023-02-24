@@ -1,34 +1,26 @@
-import de.fayard.refreshVersions.core.versionFor
-
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.kotlin)
+    alias(libs.plugins.google.ksp)
+    alias(libs.plugins.google.playServices)
 }
 
 val versionMajor = 1
 val versionMinor = 8
-val versionPatch = 3
+val versionPatch = 4
 val versionBuild = 0
 
 android {
-    compileSdk = 30
+    compileSdk = 33
     defaultConfig {
         applicationId = "fr.smarquis.fcm"
-        minSdk = 16
-        targetSdk = 30
+        namespace = "fr.smarquis.fcm"
+        minSdk = 19
+        targetSdk = 31
         versionCode = versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                argument("room.schemaLocation", "$projectDir/schemas")
-                argument("room.incremental", "true")
-                argument("room.expandProjection", "true")
-            }
-        }
     }
     buildFeatures {
         viewBinding = true
@@ -39,6 +31,10 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -47,53 +43,64 @@ android {
     }
 }
 
-dependencies {
-    /* AndroidX */
-    implementation(AndroidX.appCompat)
-    implementation(AndroidX.constraintLayout)
-    implementation(AndroidX.core.ktx)
-    implementation(AndroidX.lifecycle.liveDataKtx)
-    implementation(AndroidX.lifecycle.viewModelKtx)
-    implementation(AndroidX.preferenceKtx)
-    implementation(AndroidX.recyclerView)
-    implementation(AndroidX.transition)
-    androidTestImplementation(AndroidX.test.espresso.core)
-    androidTestImplementation(AndroidX.test.ext.junit)
-
-    /* Material Design */
-    implementation(Google.Android.material)
-
-    /* Firebase */
-    implementation(platform(Firebase.bom))
-    implementation(Firebase.cloudMessaging)
-    implementation(Firebase.realtimeDatabase)
-
-    /* Koin: Dependency Injection */
-    implementation(Koin.android)
-    testImplementation(Koin.test)
-    androidTestImplementation(Koin.test)
-
-    /* Moshi: JSON parsing */
-    implementation(Square.moshi)
-    implementation(Square.moshi.kotlinReflect)
-    kapt(Square.moshi.kotlinCodegen)
-    versionFor(Square.moshi)
-    implementation("com.squareup.moshi:moshi-adapters:${versionFor(Square.moshi)}")
-
-    /* Room: SQLite persistence */
-    implementation(AndroidX.room.runtime)
-    kapt(AndroidX.room.compiler)
-    implementation(AndroidX.room.ktx)
-    testImplementation(AndroidX.room.testing)
-
-    /* Kotlin Coroutines */
-    implementation(KotlinX.coroutines.core)
-    implementation(KotlinX.coroutines.android)
-    implementation(KotlinX.coroutines.playServices)
-
-    /* JUnit */
-    testImplementation(Testing.junit4)
-
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
-apply(plugin = "com.google.gms.google-services")
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File,
+) : CommandLineArgumentProvider {
+    override fun asArguments() = listOf("room.schemaLocation=${schemaDir.path}")
+}
+
+ksp {
+    arg(RoomSchemaArgProvider(projectDir.resolve("schemas")))
+}
+
+dependencies {
+    /* AndroidX */
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.preference.ktx)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.transition)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+
+    /* Material Design */
+    implementation(libs.google.android.material)
+
+    /* Firebase */
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.database)
+
+    /* Koin: Dependency Injection */
+    implementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    androidTestImplementation(libs.koin.test)
+
+    /* Moshi: JSON parsing */
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
+
+    /* Room: SQLite persistence */
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    testImplementation(libs.androidx.room.testing)
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.playServices)
+
+    testImplementation(libs.junit)
+}
