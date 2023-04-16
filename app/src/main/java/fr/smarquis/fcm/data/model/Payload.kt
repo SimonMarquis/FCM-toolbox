@@ -1,7 +1,6 @@
 package fr.smarquis.fcm.data.model
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
@@ -13,6 +12,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.Keep
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
+import androidx.core.app.PendingIntentCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.google.firebase.messaging.RemoteMessage
@@ -67,9 +67,9 @@ sealed class Payload {
         override fun configure(builder: Builder): Builder = builder.apply {
             builder.setContentTitle(if (TextUtils.isEmpty(title)) mContext.getString(R.string.payload_app) else title)
                     .setContentText(packageName)
-                    .addAction(0, mContext.getString(R.string.payload_app_store), PendingIntent.getActivity(mContext, 0, playStore(), 0))
+                    .addAction(0, mContext.getString(R.string.payload_app_store), PendingIntentCompat.getActivity(mContext, 0, playStore(), 0, false))
             if (isInstalled(mContext)) {
-                builder.addAction(0, mContext.getString(R.string.payload_app_uninstall), PendingIntent.getActivity(mContext, 0, uninstall(), 0))
+                builder.addAction(0, mContext.getString(R.string.payload_app_uninstall), PendingIntentCompat.getActivity(mContext, 0, uninstall(), 0, false))
             }
         }
 
@@ -120,7 +120,7 @@ sealed class Payload {
         override fun configure(builder: Builder): Builder = builder.apply {
             setContentTitle(if (TextUtils.isEmpty(title)) mContext.getString(R.string.payload_link) else title).setContentText(url)
             if (!TextUtils.isEmpty(url)) {
-                addAction(0, mContext.getString(R.string.payload_link_open), PendingIntent.getActivity(mContext, 0, intent(), 0))
+                addAction(0, mContext.getString(R.string.payload_link_open), PendingIntentCompat.getActivity(mContext, 0, intent(), 0, false))
             }
         }
 
@@ -184,7 +184,7 @@ sealed class Payload {
             setContentTitle(if (TextUtils.isEmpty(title)) mContext.getString(R.string.payload_text) else title)
                     .setContentText(text)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                    .addAction(0, mContext.getString(R.string.payload_text_copy), PendingIntent.getActivity(mContext, 0, intent, 0))
+                    .addAction(0, mContext.getString(R.string.payload_text_copy), PendingIntentCompat.getActivity(mContext, 0, intent, 0, false))
         }
 
     }
