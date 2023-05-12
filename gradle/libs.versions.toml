@@ -15,7 +15,7 @@ google-android-material = "1.8.0"
 junit = "4.13.2"
 koin = "3.4.0"
 kotlin = "1.8.21"
-kotlinx-coroutines = "1.7.0"
+kotlinx-coroutines = "1.7.1"
 ksp = "1.8.21-1.0.11"
 moshi = "1.14.0"
 
