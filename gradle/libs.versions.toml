@@ -17,7 +17,7 @@ koin = "3.4.0"
 kotlin = "1.8.21"
 kotlinx-coroutines = "1.7.0"
 ksp = "1.8.21-1.0.11"
-moshi = "1.14.0"
+moshi = "1.15.0"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
