@@ -7,14 +7,16 @@ import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
 import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.HOURS
+import java.util.concurrent.TimeUnit.MINUTES
+import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.math.abs
 
 class TimeAgoTextView
 @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     var timestamp: Long = NO_TIMESTAMP
@@ -49,10 +51,12 @@ class TimeAgoTextView
                 millisInFuture = MINUTE_TO_MILLIS
                 countDownInterval = SECOND_TO_MILLIS
             }
+
             diff < HOUR_TO_MILLIS -> {
                 millisInFuture = HOUR_TO_MILLIS
                 countDownInterval = MINUTE_TO_MILLIS
             }
+
             else -> /*ignore*/ return
         }
         countDownTimer = object : CountDownTimer(millisInFuture, countDownInterval) {

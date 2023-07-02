@@ -15,7 +15,7 @@ import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.*
+import java.util.UUID
 
 val uiHandler = Handler(Looper.getMainLooper())
 
@@ -52,14 +52,15 @@ fun uuid(context: Context): String {
 }
 
 fun RemoteMessage.asMessage() = Message(
-        from = from,
-        to = to,
-        data = data,
-        collapseKey = collapseKey,
-        messageId = messageId.toString(),
-        messageType = messageType,
-        sentTime = sentTime,
-        ttl = ttl,
-        priority = originalPriority,
-        originalPriority = priority,
-        payload = Payload.extract(this))
+    from = from,
+    to = to,
+    data = data,
+    collapseKey = collapseKey,
+    messageId = messageId.toString(),
+    messageType = messageType,
+    sentTime = sentTime,
+    ttl = ttl,
+    priority = originalPriority,
+    originalPriority = priority,
+    payload = Payload.extract(this),
+)

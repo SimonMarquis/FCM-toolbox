@@ -47,7 +47,7 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(ItemPayloadBinding.inflate(LayoutInflater.from(parent.context), parent, false), ::toggle)
+        ViewHolder(ItemPayloadBinding.inflate(LayoutInflater.from(parent.context), parent, false), ::toggle)
 
     private fun toggle(message: Message, viewHolder: ViewHolder) {
         selection[message.messageId] = !(selection[message.messageId] ?: false)
@@ -56,8 +56,11 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
 
     public override fun getItem(position: Int): Message = super.getItem(position)
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) = viewHolder.onBind(getItem(position), selection[getItem(position).messageId]
-            ?: false)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) = viewHolder.onBind(
+        getItem(position),
+        selection[getItem(position).messageId]
+            ?: false,
+    )
 
     override fun onViewRecycled(holder: ViewHolder) = holder.onUnbind()
 
@@ -90,12 +93,15 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
                         SECONDARY -> context.safeStartActivity(payload.uninstall())
                     }
                 }
+
                 is Payload.Link -> if (action == PRIMARY) context.safeStartActivity(payload.intent())
                 is Payload.Text -> if (action == PRIMARY) context.copyToClipboard(payload.text)
                 is Payload.Ping -> {
                 }
+
                 is Payload.Raw -> {
                 }
+
                 null -> {
                 }
             }
@@ -131,8 +137,8 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
 
         private fun renderButtons() = with(binding) {
             mapOf(
-                    PRIMARY to buttonPrimary,
-                    SECONDARY to buttonSecondary
+                PRIMARY to buttonPrimary,
+                SECONDARY to buttonSecondary,
             ).forEach { (action, button) ->
                 render(action, button, message?.payload)
             }
@@ -151,6 +157,7 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
                             button.setText(R.string.payload_app_store)
                             return
                         }
+
                         SECONDARY -> {
                             button.setText(R.string.payload_app_uninstall)
                             button.visibility = if (payload.isInstalled(itemView.context)) VISIBLE else GONE
@@ -158,16 +165,19 @@ class MessagesAdapter(private val moshi: Moshi) : ListAdapter<Message, MessagesA
                         }
                     }
                 }
+
                 is Payload.Link -> if (action == PRIMARY) {
                     button.visibility = VISIBLE
                     button.setText(R.string.payload_link_open)
                     return
                 }
+
                 is Payload.Text -> if (action == PRIMARY) {
                     button.visibility = VISIBLE
                     button.setText(R.string.payload_text_copy)
                     return
                 }
+
                 is Payload.Ping -> {}
                 is Payload.Raw -> {}
                 null -> {}

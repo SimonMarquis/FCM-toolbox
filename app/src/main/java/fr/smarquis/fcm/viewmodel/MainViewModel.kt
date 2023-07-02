@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import fr.smarquis.fcm.data.model.Message
+import fr.smarquis.fcm.data.model.Token
+import fr.smarquis.fcm.data.repository.MessageRepository
 import fr.smarquis.fcm.usecase.GetTokenUseCase
 import fr.smarquis.fcm.usecase.ResetTokenUseCase
-import fr.smarquis.fcm.data.model.Token
-import fr.smarquis.fcm.data.model.Message
-import fr.smarquis.fcm.data.repository.MessageRepository
 import kotlinx.coroutines.launch
 
 class MainViewModel(

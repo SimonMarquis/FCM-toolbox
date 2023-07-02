@@ -78,29 +78,33 @@ class MainActivity : AppCompatActivity() {
         viewModel.messages.observe(this, ::updateMessages)
         viewModel.presence.observe(this, ::updatePresence)
 
-        messagesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                if (positionStart != 0 || itemCount > 1) return
-                binding.recyclerView.post { binding.recyclerView.smoothScrollToPosition(0) }
-            }
-        })
+        messagesAdapter.registerAdapterDataObserver(
+            object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    super.onItemRangeInserted(positionStart, itemCount)
+                    if (positionStart != 0 || itemCount > 1) return
+                    binding.recyclerView.post { binding.recyclerView.smoothScrollToPosition(0) }
+                }
+            },
+        )
         binding.recyclerView.apply {
             setHasFixedSize(true)
             val horizontal = resources.getDimensionPixelSize(R.dimen.unit_4)
             val vertical = resources.getDimensionPixelSize(R.dimen.unit_1)
             addItemDecoration(SpacingItemDecoration(horizontal, vertical))
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
+            ItemTouchHelper(
+                object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val message = messagesAdapter.getItem(viewHolder.bindingAdapterPosition)
-                    viewModel.delete(message)
-                    Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, 1), Snackbar.LENGTH_LONG).setAction(R.string.snackbar_item_undo) {
-                        viewModel.insert(message)
-                    }.show()
-                }
-            }).attachToRecyclerView(this)
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                        val message = messagesAdapter.getItem(viewHolder.bindingAdapterPosition)
+                        viewModel.delete(message)
+                        Snackbar.make(binding.recyclerView, getString(R.string.snackbar_item_deleted, 1), Snackbar.LENGTH_LONG).setAction(R.string.snackbar_item_undo) {
+                            viewModel.insert(message)
+                        }.show()
+                    }
+                },
+            ).attachToRecyclerView(this)
             adapter = messagesAdapter
         }
     }

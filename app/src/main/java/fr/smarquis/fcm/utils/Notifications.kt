@@ -40,13 +40,13 @@ object Notifications {
             createNotificationChannel(context)
         }
         return Builder(context, context.getString(R.string.notification_channel_id))
-                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setContentIntent(getActivity(context, 0, Intent(context, MainActivity::class.java), if (SDK_INT >= M) FLAG_IMMUTABLE else 0))
-                .setLocalOnly(true)
-                .setAutoCancel(true)
-                .setDefaults(DEFAULT_ALL)
-                .setPriority(PRIORITY_MAX)
-                .setCategory(CATEGORY_MESSAGE)
+            .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+            .setContentIntent(getActivity(context, 0, Intent(context, MainActivity::class.java), if (SDK_INT >= M) FLAG_IMMUTABLE else 0))
+            .setLocalOnly(true)
+            .setAutoCancel(true)
+            .setDefaults(DEFAULT_ALL)
+            .setPriority(PRIORITY_MAX)
+            .setCategory(CATEGORY_MESSAGE)
     }
 
     fun show(context: Context, message: Message) {

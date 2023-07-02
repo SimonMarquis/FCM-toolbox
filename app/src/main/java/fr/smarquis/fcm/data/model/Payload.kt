@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
-import android.content.pm.PackageManager
+import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
@@ -12,7 +12,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.Keep
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Builder
-import androidx.core.app.PendingIntentCompat
+import androidx.core.app.PendingIntentCompat.getActivity
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.google.firebase.messaging.RemoteMessage
@@ -41,10 +41,10 @@ sealed class Payload {
 
     @JsonClass(generateAdapter = true)
     data class App(
-            @Json(name = "title")
-            internal val title: String? = null,
-            @Json(name = "package")
-            internal val packageName: String? = null
+        @Json(name = "title")
+        internal val title: String? = null,
+        @Json(name = "package")
+        internal val packageName: String? = null,
     ) : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_app
@@ -61,15 +61,15 @@ sealed class Payload {
             }
         }
 
-        override fun display(): CharSequence? = display
+        override fun display(): CharSequence = display
 
         @SuppressLint("RestrictedApi")
         override fun configure(builder: Builder): Builder = builder.apply {
             builder.setContentTitle(if (TextUtils.isEmpty(title)) mContext.getString(R.string.payload_app) else title)
-                    .setContentText(packageName)
-                    .addAction(0, mContext.getString(R.string.payload_app_store), PendingIntentCompat.getActivity(mContext, 0, playStore(), 0, false))
+                .setContentText(packageName)
+                .addAction(0, mContext.getString(R.string.payload_app_store), getActivity(mContext, 0, playStore(), 0, false))
             if (isInstalled(mContext)) {
-                builder.addAction(0, mContext.getString(R.string.payload_app_uninstall), PendingIntentCompat.getActivity(mContext, 0, uninstall(), 0, false))
+                builder.addAction(0, mContext.getString(R.string.payload_app_uninstall), getActivity(mContext, 0, uninstall(), 0, false))
             }
         }
 
@@ -83,7 +83,7 @@ sealed class Payload {
 
         fun isInstalled(context: Context): Boolean = try {
             context.packageManager.getPackageInfo(packageName.orEmpty(), 0) != null
-        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (e: NameNotFoundException) {
             false
         }
 
@@ -91,13 +91,13 @@ sealed class Payload {
 
     @JsonClass(generateAdapter = true)
     data class Link(
-            @Json(name = "title")
-            internal val title: String? = null,
-            @Json(name = "url")
-            internal val url: String? = null,
-            @Json(name = "open")
-            @Deprecated(message = "Since Android 10, starting an Activity from background has been disabled https://developer.android.com/guide/components/activities/background-starts")
-            internal val open: Boolean = false
+        @Json(name = "title")
+        internal val title: String? = null,
+        @Json(name = "url")
+        internal val url: String? = null,
+        @Json(name = "open")
+        @Deprecated(message = "Since Android 10, starting an Activity from background has been disabled https://developer.android.com/guide/components/activities/background-starts")
+        internal val open: Boolean = false,
     ) : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_link
@@ -114,13 +114,13 @@ sealed class Payload {
             }
         }
 
-        override fun display(): CharSequence? = display
+        override fun display(): CharSequence = display
 
         @SuppressLint("RestrictedApi")
         override fun configure(builder: Builder): Builder = builder.apply {
             setContentTitle(if (TextUtils.isEmpty(title)) mContext.getString(R.string.payload_link) else title).setContentText(url)
             if (!TextUtils.isEmpty(url)) {
-                addAction(0, mContext.getString(R.string.payload_link_open), PendingIntentCompat.getActivity(mContext, 0, intent(), 0, false))
+                addAction(0, mContext.getString(R.string.payload_link_open), getActivity(mContext, 0, intent(), 0, false))
             }
         }
 
@@ -130,7 +130,6 @@ sealed class Payload {
 
     }
 
-    @Suppress("CanSealedSubClassBeObject")
     @JsonClass(generateAdapter = true)
     class Ping : Payload() {
 
@@ -151,12 +150,12 @@ sealed class Payload {
 
     @JsonClass(generateAdapter = true)
     data class Text(
-            @Json(name = "title")
-            internal val title: String? = null,
-            @Json(name = "message")
-            internal val text: String? = null,
-            @Json(name = "clipboard")
-            internal val clipboard: Boolean = false
+        @Json(name = "title")
+        internal val title: String? = null,
+        @Json(name = "message")
+        internal val text: String? = null,
+        @Json(name = "clipboard")
+        internal val clipboard: Boolean = false,
     ) : Payload() {
 
         override fun notificationId(): Int = R.id.notification_id_text
@@ -175,24 +174,24 @@ sealed class Payload {
             }
         }
 
-        override fun display(): CharSequence? = display
+        override fun display(): CharSequence = display
 
         @SuppressLint("RestrictedApi")
         override fun configure(builder: Builder): Builder = builder.apply {
             val intent = Intent(mContext, CopyToClipboardActivity::class.java)
             intent.putExtra(EXTRA_TEXT, text)
             setContentTitle(if (TextUtils.isEmpty(title)) mContext.getString(R.string.payload_text) else title)
-                    .setContentText(text)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                    .addAction(0, mContext.getString(R.string.payload_text_copy), PendingIntentCompat.getActivity(mContext, 0, intent, 0, false))
+                .setContentText(text)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .addAction(0, mContext.getString(R.string.payload_text_copy), getActivity(mContext, 0, intent, 0, false))
         }
 
     }
 
     @JsonClass(generateAdapter = true)
     data class Raw(
-            @Json(name = "data")
-            internal val data: Map<String, String>? = null
+        @Json(name = "data")
+        internal val data: Map<String, String>? = null,
     ) : Payload(), KoinComponent {
 
         override fun notificationId(): Int = R.id.notification_id_raw
@@ -204,13 +203,13 @@ sealed class Payload {
             moshi.adapter<Map<*, *>>(MutableMap::class.java).indent("  ").toJson(data)
         }
 
-        override fun display(): CharSequence? = display
+        override fun display(): CharSequence = display
 
         @SuppressLint("RestrictedApi")
         override fun configure(builder: Builder): Builder = builder.apply {
             setContentTitle(mContext.getString(R.string.payload_raw))
-                    .setContentText(display())
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(display()))
+                .setContentText(display())
+                .setStyle(NotificationCompat.BigTextStyle().bigText(display()))
         }
     }
 
@@ -231,7 +230,7 @@ sealed class Payload {
                     if (payload != null) {
                         return payload
                     }
-                } catch (e: JsonDataException) {
+                } catch (e: JsonDataException ) {
                     e.printStackTrace()
                 } catch (e: IOException) {
                     e.printStackTrace()

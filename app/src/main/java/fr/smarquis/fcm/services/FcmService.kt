@@ -19,10 +19,10 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import fr.smarquis.fcm.usecase.UpdateTokenUseCase
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
 import fr.smarquis.fcm.data.repository.MessageRepository
+import fr.smarquis.fcm.usecase.UpdateTokenUseCase
 import fr.smarquis.fcm.utils.Notifications
 import fr.smarquis.fcm.utils.asMessage
 import fr.smarquis.fcm.utils.copyToClipboard

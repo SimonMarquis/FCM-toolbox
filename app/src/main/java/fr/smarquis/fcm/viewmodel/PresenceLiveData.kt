@@ -12,7 +12,9 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import fr.smarquis.fcm.BuildConfig
 import fr.smarquis.fcm.data.model.Presence
-import fr.smarquis.fcm.data.model.Presence.*
+import fr.smarquis.fcm.data.model.Presence.Error
+import fr.smarquis.fcm.data.model.Presence.Offline
+import fr.smarquis.fcm.data.model.Presence.Online
 import fr.smarquis.fcm.data.model.Token
 import fr.smarquis.fcm.usecase.GetTokenUseCase
 import fr.smarquis.fcm.utils.uuid
@@ -78,7 +80,7 @@ class PresenceLiveData(
             Token.Loading, is Token.Failure, null -> null
         },
         "version" to BuildConfig.VERSION_CODE,
-        "timestamp" to ServerValue.TIMESTAMP
+        "timestamp" to ServerValue.TIMESTAMP,
     )
 
 }

@@ -49,20 +49,22 @@ val database = module {
 val json = module {
     single {
         Moshi.Builder()
-                .add(PolymorphicJsonAdapterFactory.of(Payload::class.java, "type")
-                        .withSubtype(Payload.App::class.java, "app")
-                        .withSubtype(Payload.Link::class.java, "link")
-                        .withSubtype(Payload.Ping::class.java, "ping")
-                        .withSubtype(Payload.Raw::class.java, "raw")
-                        .withSubtype(Payload.Text::class.java, "text"))
-                .add(KotlinJsonAdapterFactory()).build()
+            .add(
+                PolymorphicJsonAdapterFactory.of(Payload::class.java, "type")
+                    .withSubtype(Payload.App::class.java, "app")
+                    .withSubtype(Payload.Link::class.java, "link")
+                    .withSubtype(Payload.Ping::class.java, "ping")
+                    .withSubtype(Payload.Raw::class.java, "raw")
+                    .withSubtype(Payload.Text::class.java, "text"),
+            )
+            .add(KotlinJsonAdapterFactory()).build()
     }
     single {
         mapOf(
-                "app" to Payload.App::class.java,
-                "link" to Payload.Link::class.java,
-                "ping" to Payload.Ping::class.java,
-                "text" to Payload.Text::class.java
+            "app" to Payload.App::class.java,
+            "link" to Payload.Link::class.java,
+            "ping" to Payload.Ping::class.java,
+            "text" to Payload.Text::class.java,
         )
     }
 }
