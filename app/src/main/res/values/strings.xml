@@ -38,6 +38,8 @@
     <string name="dialog_delete_all_negative">@android:string/cancel</string>
     <string name="snackbar_item_deleted" tools:ignore="PluralsCandidate">%d deleted</string>
     <string name="snackbar_item_undo">Undo</string>
+    <string name="snackbar_notification_permission_required">Notifications permission is required</string>
+    <string name="snackbar_notification_permission_grant">Grant</string>
     <string name="topics_hint">Topic name</string>
     <string name="topics_subscribe">Subscribe</string>
     <string name="topics_subscribed">Subscribed to topic: `%s`</string>

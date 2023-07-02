@@ -15,18 +15,28 @@
  */
 package fr.smarquis.fcm.view.ui
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.O
+import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.isInvisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -56,6 +66,9 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModel()
 
     private val messagesAdapter: MessagesAdapter = MessagesAdapter(get())
+
+    @RequiresApi(O)
+    private val requestNotificationsPermission = registerForActivityResult(RequestPermission(), ::onNotificationsPermissionResult)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,6 +133,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Notifications.removeAll(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        checkNotificationsPermission()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -205,5 +223,26 @@ class MainActivity : AppCompatActivity() {
         Presence.Online -> getString(R.string.presence_online)
         is Presence.Error -> error.message
     }
+
+    private fun checkNotificationsPermission() {
+        if (SDK_INT < O) return
+        val notificationManager = NotificationManagerCompat.from(this)
+        if (notificationManager.areNotificationsEnabled()) return
+        if (SDK_INT < TIRAMISU) return permissionSnackBar { startActivity(Notifications.settingsIntent(this)) }
+        if (checkSelfPermission(this, POST_NOTIFICATIONS) == PERMISSION_GRANTED) return
+        if (shouldShowRequestPermissionRationale(this, POST_NOTIFICATIONS)) return permissionSnackBar { requestNotificationsPermission.launch(POST_NOTIFICATIONS) }
+        requestNotificationsPermission.launch(POST_NOTIFICATIONS)
+    }
+
+    @RequiresApi(O)
+    private fun onNotificationsPermissionResult(isGranted: Boolean) {
+        if (isGranted) return
+        permissionSnackBar { startActivity(Notifications.settingsIntent(this)) }
+    }
+
+    private fun permissionSnackBar(action: () -> Unit) = Snackbar
+        .make(binding.root, getString(R.string.snackbar_notification_permission_required), Snackbar.LENGTH_INDEFINITE)
+        .setAction(R.string.snackbar_notification_permission_grant) { action() }
+        .show()
 
 }

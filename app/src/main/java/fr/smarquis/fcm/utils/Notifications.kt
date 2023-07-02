@@ -9,8 +9,12 @@ import android.content.Intent
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Build.VERSION_CODES.O
+import android.provider.Settings
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat.*
+import androidx.core.app.NotificationCompat.Builder
+import androidx.core.app.NotificationCompat.CATEGORY_MESSAGE
+import androidx.core.app.NotificationCompat.DEFAULT_ALL
+import androidx.core.app.NotificationCompat.PRIORITY_MAX
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import fr.smarquis.fcm.R
@@ -54,4 +58,10 @@ object Notifications {
     fun removeAll(context: Context) {
         context.getSystemService<NotificationManager>()?.cancelAll()
     }
+
+    @RequiresApi(O)
+    fun settingsIntent(context: Context) = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        .putExtra(Settings.EXTRA_CHANNEL_ID, context.getString(R.string.notification_channel_id))
+
 }
