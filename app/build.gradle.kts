@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
     implementation(libs.moshi.adapters)
+    ksp(libs.moshi.kotlin.codegen)
 
     /* Room: SQLite persistence */
     implementation(libs.androidx.room.runtime)
