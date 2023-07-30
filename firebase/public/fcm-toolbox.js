@@ -148,6 +148,14 @@ function findDeviceUserList() {
   return $("#list-device-users");
 }
 
+function findSendButton() {
+  return $("#btn-send");
+}
+
+function findSendButtonSpinner() {
+  return $("#btn-send-spinner");
+}
+
 function resetAndReload() {
   if (confirm("Reset data?")) {
     localStorage.clear();
@@ -567,15 +575,25 @@ function updateEmptyDeviceListHeader() {
 }
 
 function triggerSendMessage() {
-  if (showSettingsIfNeeded()) {
-    return;
+  if (showSettingsIfNeeded()) return;
+  if (findSendButton().prop("disabled")) return;
+
+  function loading(loading) {
+    findSendButton().prop("disabled", loading);
+    findDeviceToken().prop("disabled", loading);
+    if (loading) findSendButtonSpinner().show();
+    else findSendButtonSpinner().hide();
   }
+
+  loading(true);
+
   var payload = buildPayload();
   var type = PAYLOAD_TYPES.current();
-  
+
   firebase.functions().httpsCallable("send")(payload)
     .then((data) => {
       analyticsLogSendMessage(type, true);
+      loading(false);
       var alert = $(
         "<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
       );
@@ -589,6 +607,7 @@ function triggerSendMessage() {
     })
     .catch((data) => {
       analyticsLogSendMessage(type, false);
+      loading(false);
       var alert = $(
         "<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
       );
