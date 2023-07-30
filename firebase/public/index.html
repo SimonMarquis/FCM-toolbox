@@ -200,19 +200,37 @@
           </div>
           <div class="modal-body">
             <form>
-              <h5>Firebase Cloud Messaging <small class="text-muted">(Required)</small></h5>
+              <h5>Firebase <small class="text-muted">(Required)</small></h5>
+              <small class="form-text text-muted">Modification requires a page reload</small>
               <p></p>
               <div class="form-group row">
-                <label for="settings-fcm-api-key" class="col-sm-3 col-form-label">API Key</label>
+                <label for="settings-project-id" class="col-sm-3 col-form-label">Project ID</label>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" value="" id="settings-fcm-api-key" required>
+                  <input class="form-control" type="text" value="" id="settings-project-id" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="settings-app-id" class="col-sm-3 col-form-label">App ID</label>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text" value="" id="settings-app-id" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="settings-api-key" class="col-sm-3 col-form-label">API Key</label>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text" value="" id="settings-api-key" required>
                 </div>
               </div>
 
+              <hr>
+
+              <h5>Firebase Cloud Messaging <small class="text-muted"></small></h5>
+              <p></p>
+
               <div class="form-group row">
-                <label for="settings-fcm-ttl" class="col-sm-3 col-form-label">Ttl</label>
+                <label for="settings-fcm-ttl" class="col-sm-3 col-form-label">TTL</label>
                 <div class="col-sm-9">
-                  <input class="form-control" type="number" value="" id="settings-fcm-ttl">
+                  <input class="form-control" type="number" min="0" value="" id="settings-fcm-ttl">
                 </div>
               </div>
 
@@ -229,12 +247,19 @@
               <hr>
 
               <h5>Firebase Realtime Database <small class="text-muted">(Optional)</small></h5>
+                <div class="custom-control custom-switch float-right">
+                  <input type="checkbox" class="custom-control-input" id="settings-frd-switch">
+                  <label class="custom-control-label" for="settings-frd-switch"></label>
+                </div>
+              </h5>
+              <small class="form-text text-muted">Modification requires a page reload</small>
               <p></p>
-              <div class="form-group row">
-                <label for="settings-frd-database-url" class="col-sm-3 col-form-label">Url</label>
-                <div class="col-sm-9">
-                  <input class="form-control" type="text" value="" id="settings-frd-database-url" required>
-                  <small class="form-text text-muted">Modification requires a page reload</small>
+              <div id="settings-frd">
+                <div class="form-group row">
+                  <label for="settings-frd-database-url" class="col-sm-3 col-form-label">Url</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="" id="settings-frd-database-url" required>
+                  </div>
                 </div>
               </div>
 
@@ -249,24 +274,6 @@
               <small class="form-text text-muted">Modification requires a page reload</small>
               <p></p>
               <div id="settings-fa">
-                <div class="form-group row">
-                  <label for="settings-fa-api-key" class="col-sm-3 col-form-label">API Key</label>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text" value="" id="settings-fa-api-key" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="settings-fa-project-id" class="col-sm-3 col-form-label">Project ID</label>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text" value="" id="settings-fa-project-id" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="settings-fa-app-id" class="col-sm-3 col-form-label">App ID</label>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text" value="" id="settings-fa-app-id" required>
-                  </div>
-                </div>
                 <div class="form-group row">
                   <label for="settings-fa-measurement-id" class="col-sm-3 col-form-label">Meas. ID</label>
                   <div class="col-sm-9">
