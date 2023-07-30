@@ -389,7 +389,6 @@ function initFirebase() {
   }
   var devices = firebase.database().ref("devices");
   devices.on("value", function (snapshot) {
-    var users = snapshot.val();
     var items = [];
     $.each(snapshot.val() || [], function (key, user) {
       if (user.token) {
@@ -537,16 +536,9 @@ function triggerSendMessage() {
   }
   var payload = buildPayload();
   var type = PAYLOAD_TYPES.current();
-  $.ajax({
-    url: "https://fcm.googleapis.com/fcm/send",
-    type: "post",
-    beforeSend: function (request) {
-      request.setRequestHeader("Authorization", "key=" + (getSettings().fcm || {}).apiKey);
-      request.setRequestHeader("Content-Type", "application/json");
-    },
-    data: JSON.stringify(payload),
-    dataType: "json",
-    success: function (data) {
+  
+  firebase.functions().httpsCallable("send").call(payload)
+    .then((data) => {
       analyticsLogSendMessage(type, true);
       var alert = $(
         "<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
@@ -558,8 +550,8 @@ function triggerSendMessage() {
       alert.delay(10000).fadeOut(function () {
         alert.remove();
       });
-    },
-    error: function (data) {
+    })
+    .catch((data) => {
       analyticsLogSendMessage(type, false);
       var alert = $(
         "<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
@@ -571,8 +563,7 @@ function triggerSendMessage() {
       alert.delay(20000).fadeOut(function () {
         alert.remove();
       });
-    }
-  });
+    })
 }
 
 function buildPayload() {
@@ -584,7 +575,7 @@ function buildPayload() {
 
   var payload = {
     to: token,
-    time_to_live: ttl,
+    ttl: ttl,
     priority: priority
   };
 
