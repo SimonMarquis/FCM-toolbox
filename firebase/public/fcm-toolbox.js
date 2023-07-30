@@ -1,19 +1,19 @@
 "use strict";
 
 var DEFAULT_APP_SETTINGS = {
+  apiKey: "AIzaSyBBd-gJUlg_HFdbWz6l90gJL2tHEm4itqY",
+  projectId: "fir-cloudmessaging-4e2cd",
+  appId: "1:322141800886:web:5cdb37ecedcc8c359d5917",
   fcm: {
-    apiKey: "AAAASwElybY:APA91bFaTT_zKLcLYqB0soW8PJmFFG7x1F3wiR0MGta9lLsU22uAVa0VD_3zzz-OremJKDEWEf52OD554byamcwAmZldgrQKfwAjjbhZz_5DYT-z1gcflUBFSWVQQ9lSE9KwDBNHULvfVKmQwxa7xNwuPHz-VfdTbw",
     ttl: 60,
     priority: "high"
   },
   frd: {
+    active: true,
     databaseUrl: "https://fir-cloudmessaging-4e2cd.firebaseio.com"
   },
   fa: {
     active: true,
-    apiKey: "AIzaSyBBd-gJUlg_HFdbWz6l90gJL2tHEm4itqY",
-    projectId: "fir-cloudmessaging-4e2cd",
-    appId: "1:322141800886:web:5cdb37ecedcc8c359d5917",
     measurementId: "G-W942B55TP2"
   },
   hide: false
@@ -172,7 +172,8 @@ function renderNotificationVisibility() {
 }
 
 function showSettingsIfNeeded() {
-  if (!(getSettings().fcm || {}).apiKey) {
+  var settings = getSettings()
+  if (!settings.projectId || !settings.appId || !settings.apiKey) {
     showSettings();
     return true;
   }
@@ -297,29 +298,62 @@ function bind() {
 
 function initSettings() {
   var settings = getSettings();
-  var fcmApiKey = $("#settings-fcm-api-key");
+  var apiKey = $("#settings-api-key");
+  var projectId = $("#settings-project-id");
+  var appId = $("#settings-app-id");
   var fcmTtl = $("#settings-fcm-ttl");
   var fcmPriority = $("#settings-fcm-priority");
+  var frdGroup = $("#settings-frd");
+  var frdSwitch = $("#settings-frd-switch");
   var frdDatabaseUrl = $("#settings-frd-database-url");
   var faGroup = $("#settings-fa");
   var faSwitch = $("#settings-fa-switch");
-  var faApiKey = $("#settings-fa-api-key");
-  var faProjectId = $("#settings-fa-project-id");
-  var faAppId = $("#settings-fa-app-id");
   var faMeasurementId = $("#settings-fa-measurement-id");
 
-  fcmApiKey.val((settings.fcm || {}).apiKey);
-  fcmApiKey.bind("input", function () {
-    fcmApiKey.parent().change();
-    setSettings($.extend(true, getSettings(), { fcm: { apiKey: $(this).val() } }));
+  apiKey.val(settings.apiKey);
+  apiKey.bind("input", function () {
+    apiKey.parent().change();
+    setSettings($.extend(true, getSettings(), { apiKey: $(this).val() }));
   });
-  fcmApiKey
+  apiKey
     .parent()
     .bind("change", function () {
-      if (fcmApiKey.val()) {
-        fcmApiKey.removeClass("is-invalid");
+      if (apiKey.val()) {
+        apiKey.removeClass("is-invalid");
       } else {
-        fcmApiKey.addClass("is-invalid");
+        apiKey.addClass("is-invalid");
+      }
+    })
+    .change();
+
+  projectId.val(settings.projectId);
+  projectId.bind("input", function () {
+    projectId.parent().change();
+    setSettings($.extend(true, getSettings(), { projectId: $(this).val() }));
+  });
+  projectId
+    .parent()
+    .bind("change", function () {
+      if (projectId.val()) {
+        projectId.removeClass("is-invalid");
+      } else {
+        projectId.addClass("is-invalid");
+      }
+    })
+    .change();
+
+  appId.val(settings.appId);
+  appId.bind("input", function () {
+    appId.parent().change();
+    setSettings($.extend(true, getSettings(), { appId: $(this).val() }));
+  });
+  appId
+    .parent()
+    .bind("change", function () {
+      if (appId.val()) {
+        appId.removeClass("is-invalid");
+      } else {
+        appId.addClass("is-invalid");
       }
     })
     .change();
@@ -332,6 +366,18 @@ function initSettings() {
   fcmPriority.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fcm: { priority: $(this).val() } }));
   });
+  frdSwitch.prop("checked", Boolean((settings.frd || {}).active));
+  frdSwitch
+    .change(function () {
+      var isChecked = $(this).is(":checked");
+      setSettings($.extend(true, getSettings(), { frd: { active: isChecked } }));
+      if (isChecked) {
+        frdGroup.show();
+      } else {
+        frdGroup.hide();
+      }
+    })
+    .change();
   frdDatabaseUrl.val((settings.frd || {}).databaseUrl);
   frdDatabaseUrl.bind("input", function () {
     setSettings($.extend(true, getSettings(), { frd: { databaseUrl: $(this).val() } }));
@@ -348,18 +394,6 @@ function initSettings() {
       }
     })
     .change();
-  faApiKey.val((settings.fa || {}).apiKey);
-  faApiKey.bind("input", function () {
-    setSettings($.extend(true, getSettings(), { fa: { apiKey: $(this).val() } }));
-  });
-  faProjectId.val((settings.fa || {}).projectId);
-  faProjectId.bind("input", function () {
-    setSettings($.extend(true, getSettings(), { fa: { projectId: $(this).val() } }));
-  });
-  faAppId.val((settings.fa || {}).appId);
-  faAppId.bind("input", function () {
-    setSettings($.extend(true, getSettings(), { fa: { appId: $(this).val() } }));
-  });
   faMeasurementId.val((settings.fa || {}).measurementId);
   faMeasurementId.bind("input", function () {
     setSettings($.extend(true, getSettings(), { fa: { measurementId: $(this).val() } }));
@@ -377,36 +411,37 @@ function initFirebase() {
   }
 
   var config = {
+    projectId: settings.projectId,
+    appId: settings.appId,
+    apiKey: settings.apiKey,
     databaseURL: (settings.frd || {}).databaseUrl,
-    apiKey: (settings.fa || {}).apiKey,
-    projectId: (settings.fa || {}).projectId,
-    appId: (settings.fa || {}).appId,
     measurementId: (settings.fa || {}).measurementId
   };
   firebase.initializeApp(config);
   if ((settings.fa || {}).active && typeof firebase.analytics == 'function') {
     analytics = firebase.analytics();
   }
-  var devices = firebase.database().ref("devices");
-  devices.on("value", function (snapshot) {
-    var users = snapshot.val();
-    var items = [];
-    $.each(snapshot.val() || [], function (key, user) {
-      if (user.token) {
-        items.push({
-          timestamp: user.timestamp,
-          label: user.name,
-          value: user.token
-        });
-      }
+  if ((settings.frd || {}).active && typeof firebase.database == 'function') {
+    var devices = firebase.database().ref("devices");
+    devices.on("value", function (snapshot) {
+      var items = [];
+      $.each(snapshot.val() || [], function (key, user) {
+        if (user.token) {
+          items.push({
+            timestamp: user.timestamp,
+            label: user.name,
+            value: user.token
+          });
+        }
+      });
+      items.sort(function (a, b) {
+        return a.timestamp - b.timestamp;
+      });
+      setFcmUsers(items);
+      displayConnectedDevices();
+      findDeviceToken().change();
     });
-    items.sort(function (a, b) {
-      return a.timestamp - b.timestamp;
-    });
-    setFcmUsers(items);
-    displayConnectedDevices();
-    findDeviceToken().change();
-  });
+  }
 }
 
 function showDefaultDeviceToken() {
@@ -537,16 +572,9 @@ function triggerSendMessage() {
   }
   var payload = buildPayload();
   var type = PAYLOAD_TYPES.current();
-  $.ajax({
-    url: "https://fcm.googleapis.com/fcm/send",
-    type: "post",
-    beforeSend: function (request) {
-      request.setRequestHeader("Authorization", "key=" + (getSettings().fcm || {}).apiKey);
-      request.setRequestHeader("Content-Type", "application/json");
-    },
-    data: JSON.stringify(payload),
-    dataType: "json",
-    success: function (data) {
+  
+  firebase.functions().httpsCallable("send").call(payload)
+    .then((data) => {
       analyticsLogSendMessage(type, true);
       var alert = $(
         "<div class='alert alert-success alert-dismissible fade show' role='alert' data-alert-timeout='10000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
@@ -558,8 +586,8 @@ function triggerSendMessage() {
       alert.delay(10000).fadeOut(function () {
         alert.remove();
       });
-    },
-    error: function (data) {
+    })
+    .catch((data) => {
       analyticsLogSendMessage(type, false);
       var alert = $(
         "<div class='alert alert-danger alert-dismissible fade show' role='alert' data-alert-timeout='20000' style='display: none;'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><pre data-request></pre><hr/><pre data-response></pre></div>"
@@ -571,8 +599,7 @@ function triggerSendMessage() {
       alert.delay(20000).fadeOut(function () {
         alert.remove();
       });
-    }
-  });
+    })
 }
 
 function buildPayload() {
@@ -584,7 +611,7 @@ function buildPayload() {
 
   var payload = {
     to: token,
-    time_to_live: ttl,
+    ttl: ttl,
     priority: priority
   };
 
