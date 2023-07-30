@@ -35,6 +35,8 @@ exports.send = onCall((request) => {
   // FirebaseMessagingError: data must only contain string value
   const convertData = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, (typeof v === "string" || v instanceof String) ? v : JSON.stringify(v)]));
 
+  // https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.basemessage
+  // https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.androidconfig
   const message = {
     data: convertData(data),
     android: {
