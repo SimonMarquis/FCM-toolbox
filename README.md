@@ -36,7 +36,7 @@ The public web app is located at [https://fcm-toolbox-public.web.app](https://fc
 
 ### Configuration
 
-You can host your own version of the web FCM toolbox or simply provide your own API Keys.  
+You can host your own version of the web FCM toolbox or simply provide your own Firebase identifiers.  
 [See official documentation](https://firebase.google.com/docs/cloud-messaging/js/client).  
 
 ![web_configuration](art/web_configuration.png) 
