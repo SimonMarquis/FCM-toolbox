@@ -26,7 +26,7 @@ You can build your own version of the Android FCM toolbox app and provide your o
 
 ## Web app
 
-The public web app is located at [simonmarquis.github.io/FCM-toolbox](https://simonmarquis.github.io/FCM-toolbox)
+The public web app is located at [https://fcm-toolbox-public.web.app](https://fcm-toolbox-public.web.app)
 
 - Send multiple types of payloads
 - Maintain a local list of devices
