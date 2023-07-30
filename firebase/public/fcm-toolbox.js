@@ -573,7 +573,7 @@ function triggerSendMessage() {
   var payload = buildPayload();
   var type = PAYLOAD_TYPES.current();
   
-  firebase.functions().httpsCallable("send").call(payload)
+  firebase.functions().httpsCallable("send")(payload)
     .then((data) => {
       analyticsLogSendMessage(type, true);
       var alert = $(
