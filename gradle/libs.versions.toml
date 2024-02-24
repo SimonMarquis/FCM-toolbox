@@ -10,14 +10,14 @@ androidx-room = "2.6.1"
 androidx-test-espresso = "3.5.1"
 androidx-test-ext-junit = "1.1.5"
 androidx-transition = "1.4.1"
-firebase-bom = "32.7.1"
+firebase-bom = "32.7.2"
 google-android-material = "1.11.0"
 junit = "4.13.2"
 koin = "3.5.3"
 kotlin = "2.0.0-Beta4"
-kotlinx-coroutines = "1.7.3"
+kotlinx-coroutines = "1.8.0"
 ksp = "2.0.0-Beta4-1.0.17"
-moshi = "1.15.0"
+moshi = "1.15.1"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
@@ -54,4 +54,4 @@ android-application = { id = "com.android.application", version.ref = "android-g
 android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-google-playServices = { id = "com.google.gms.google-services", version = "4.4.0" }
+google-playServices = { id = "com.google.gms.google-services", version = "4.4.1" }
