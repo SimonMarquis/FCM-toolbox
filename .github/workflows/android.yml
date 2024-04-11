@@ -25,7 +25,7 @@ jobs:
         distribution: 'temurin'
     - uses: gradle/actions/setup-gradle@1168cd3d07c1876a65e1724114de42ccbdfa7b78 # v3.2.1
     - name: Check Assemble Lint
-      run: ./gradlew check assembleDebug lintDebug -Pksp.useKSP2=${{ matrix.useKSP2 }} -Pandroid.lint.useK2Uast=${{ matrix.useK2Uast }} -Pandroid.experimental.lint.version=8.5.0-alpha02 --no-build-cache --rerun-tasks --stacktrace
+      run: ./gradlew check assembleDebug lintDebug -Pksp.useKSP2=${{ matrix.useKSP2 }} -Pandroid.lint.useK2Uast=${{ matrix.useK2Uast }} -Pandroid.experimental.lint.version=8.5.0-alpha05 --no-build-cache --rerun-tasks --stacktrace
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
