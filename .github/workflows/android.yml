@@ -28,7 +28,7 @@ jobs:
         validate-wrappers: true
         gradle-home-cache-cleanup: true
     - name: Check Assemble Lint
-      run: ./gradlew check assembleDebug lintDebug -Pksp.useKSP2=${{ matrix.useKSP2 }} -Pandroid.lint.useK2Uast=${{ matrix.useK2Uast }} -Pandroid.experimental.lint.version=8.5.0-alpha06 --no-build-cache --rerun-tasks --stacktrace
+      run: ./gradlew check assembleDebug lintDebug -Pksp.useKSP2=${{ matrix.useKSP2 }} -Pandroid.lint.useK2Uast=${{ matrix.useK2Uast }} -Pandroid.experimental.lint.version=8.5.0-alpha07 --no-build-cache --rerun-tasks --stacktrace
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
