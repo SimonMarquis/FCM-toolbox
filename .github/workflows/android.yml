@@ -9,13 +9,7 @@ on:
 jobs:
   build:
 
-    name: Android CI [useKSP2=${{ matrix.useKSP2 }}, useK2Uast=${{ matrix.useK2Uast }}]
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        useKSP2: [true, false]
-        useK2Uast: [true, false]
 
     steps:
     - uses: actions/checkout@v4
@@ -27,10 +21,12 @@ jobs:
       with:
         validate-wrappers: true
         gradle-home-cache-cleanup: true
-    - name: Check Assemble Lint
-      run: ./gradlew check assembleDebug lintDebug -Pksp.useKSP2=${{ matrix.useKSP2 }} -Pandroid.lint.useK2Uast=${{ matrix.useK2Uast }} -Pandroid.experimental.lint.version=8.6.0-alpha01 --no-build-cache --rerun-tasks --stacktrace
+    - name: Check
+      run: ./gradlew check --stacktrace
+    - name: Assemble
+      run: ./gradlew assembleDebug --stacktrace
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug-${{ matrix.useKSP2 }}-${{ matrix.useK2Uast }}.apk
+        name: app-debug.apk
         path: app/build/outputs/apk/debug/app-debug.apk
