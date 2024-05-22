@@ -160,3 +160,6 @@ gradle-app.setting
 
 # Library files
 obj/
+
+# Kotlin
+.kotlin
