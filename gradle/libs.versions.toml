@@ -54,4 +54,4 @@ android-application = { id = "com.android.application", version.ref = "android-g
 android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-google-playServices = { id = "com.google.gms.google-services", version = "4.4.1" }
+google-playServices = { id = "com.google.gms.google-services", version = "4.4.2" }
