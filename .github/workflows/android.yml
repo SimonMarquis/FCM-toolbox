@@ -17,7 +17,7 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-    - uses: gradle/actions/setup-gradle@31ae3562f68c96d481c31bc1a8a55cc1be162f83 # v3.4.1
+    - uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
       with:
         validate-wrappers: true
         gradle-home-cache-cleanup: true
