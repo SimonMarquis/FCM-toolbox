@@ -224,6 +224,9 @@ class MainActivity : AppCompatActivity() {
         binding.inputText.requestFocus()
     }
 
+    /**
+     * [Official documentation](https://firebase.google.com/support/troubleshooter/fcm/delivery/diagnose/android/device)
+     */
     private fun openDiagnostics() {
         val componentName = ComponentName("com.google.android.gms", "com.google.android.gms.gcm.GcmDiagnostics")
         val intent = Intent().setComponent(componentName)
