@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity() {
     private fun openDiagnostics() {
         val componentName = ComponentName("com.google.android.gms", "com.google.android.gms.gcm.GcmDiagnostics")
         val intent = Intent().setComponent(componentName)
-        startActivity(intent)
+        safeStartActivity(intent)
     }
 
     private fun Presence?.message() = when (this) {
