@@ -13,19 +13,15 @@ import com.google.firebase.messaging.RemoteMessage
 import fr.smarquis.fcm.R
 import fr.smarquis.fcm.data.model.Message
 import fr.smarquis.fcm.data.model.Payload
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.util.UUID
 
 val uiHandler = Handler(Looper.getMainLooper())
-
-fun Throwable.asString(): String = StringWriter().apply { printStackTrace(PrintWriter(this)) }.toString()
 
 fun Context.safeStartActivity(intent: Intent?) {
     try {
         startActivity(intent)
     } catch (e: Exception) {
-        Toast.makeText(this, e.asString(), Toast.LENGTH_LONG).show()
+        Toast.makeText(this, e.stackTraceToString(), Toast.LENGTH_LONG).show()
     }
 }
 

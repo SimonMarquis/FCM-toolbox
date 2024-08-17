@@ -51,7 +51,6 @@ import fr.smarquis.fcm.data.model.Token
 import fr.smarquis.fcm.databinding.ActivityMainBinding
 import fr.smarquis.fcm.databinding.TopicsDialogBinding
 import fr.smarquis.fcm.utils.Notifications
-import fr.smarquis.fcm.utils.asString
 import fr.smarquis.fcm.utils.safeStartActivity
 import fr.smarquis.fcm.view.adapter.MessagesAdapter
 import fr.smarquis.fcm.viewmodel.MainViewModel
@@ -206,13 +205,13 @@ class MainActivity : AppCompatActivity() {
                 val topic = binding.inputText.text.toString()
                 messaging.subscribeToTopic(topic)
                     .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_subscribed, topic), LENGTH_LONG).show() }
-                    .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
+                    .addOnFailureListener(this) { Toast.makeText(this, it.stackTraceToString(), LENGTH_LONG).show() }
             }
             .setNegativeButton(R.string.topics_unsubscribe) { _: DialogInterface?, _: Int ->
                 val topic = binding.inputText.text.toString()
                 messaging.unsubscribeFromTopic(topic)
                     .addOnSuccessListener(this) { Toast.makeText(this, getString(R.string.topics_unsubscribed, topic), LENGTH_LONG).show() }
-                    .addOnFailureListener(this) { Toast.makeText(this, it.asString(), LENGTH_LONG).show() }
+                    .addOnFailureListener(this) { Toast.makeText(this, it.stackTraceToString(), LENGTH_LONG).show() }
             }.show()
         binding.inputText.doAfterTextChanged { editable ->
             val matches = editable?.let(pattern::matcher)?.matches() ?: false
