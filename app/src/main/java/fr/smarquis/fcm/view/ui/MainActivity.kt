@@ -16,6 +16,7 @@
 package fr.smarquis.fcm.view.ui
 
 import android.Manifest.permission.POST_NOTIFICATIONS
+import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_POSITIVE
@@ -166,6 +167,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_invalidate_token -> viewModel.resetToken()
             R.id.action_topics -> showTopicsDialog()
             R.id.action_delete_all -> showDeleteDialog()
+            R.id.action_diagnostics -> openDiagnostics()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -220,6 +222,15 @@ class MainActivity : AppCompatActivity() {
         // Trigger afterTextChanged()
         binding.inputText.text = null
         binding.inputText.requestFocus()
+    }
+
+    /**
+     * [Official documentation](https://firebase.google.com/support/troubleshooter/fcm/delivery/diagnose/android/device)
+     */
+    private fun openDiagnostics() {
+        val componentName = ComponentName("com.google.android.gms", "com.google.android.gms.gcm.GcmDiagnostics")
+        val intent = Intent().setComponent(componentName)
+        safeStartActivity(intent)
     }
 
     private fun Presence?.message() = when (this) {

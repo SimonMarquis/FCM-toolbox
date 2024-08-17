@@ -33,6 +33,7 @@
     <string name="menu_invalidate_token">Invalidate token</string>
     <string name="menu_topics">Topics</string>
     <string name="menu_delete_all">Delete all messages</string>
+    <string name="menu_diagnostics">Diagnostics</string>
     <string name="dialog_delete_all_title" tools:ignore="PluralsCandidate">Delete %d messages?</string>
     <string name="dialog_delete_all_positive">Delete</string>
     <string name="dialog_delete_all_negative">@android:string/cancel</string>
