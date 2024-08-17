@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_invalidate_token -> viewModel.resetToken()
             R.id.action_topics -> showTopicsDialog()
             R.id.action_delete_all -> showDeleteDialog()
-            R.id.action_fcm_diagnostics -> gotoFcmDiagnostics()
+            R.id.action_diagnostics -> openDiagnostics()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -224,10 +224,9 @@ class MainActivity : AppCompatActivity() {
         binding.inputText.requestFocus()
     }
 
-    private fun gotoFcmDiagnostics() {
+    private fun openDiagnostics() {
         val componentName = ComponentName("com.google.android.gms", "com.google.android.gms.gcm.GcmDiagnostics")
-        val intent = Intent()
-            .setComponent(componentName)
+        val intent = Intent().setComponent(componentName)
         startActivity(intent)
     }
 

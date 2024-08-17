@@ -41,7 +41,7 @@
         android:title="@string/menu_delete_all"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_fcm_diagnostics"
-        android:title="@string/menu_fcm_diagnostics"
+        android:id="@+id/action_diagnostics"
+        android:title="@string/menu_diagnostics"
         app:showAsAction="never" />
 </menu>
