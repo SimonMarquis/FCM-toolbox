@@ -1,6 +1,6 @@
 [versions]
 android-gradlePlugin = "8.6.1"
-androidx-appcompat = "1.6.1"
+androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.1.4"
 androidx-core = "1.13.1"
 androidx-lifecycle = "2.8.6"
