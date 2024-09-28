@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = "fr.smarquis.fcm"
         namespace = "fr.smarquis.fcm"
-        minSdk = 19
+        minSdk = 23
         targetSdk = 35
         versionCode = versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
