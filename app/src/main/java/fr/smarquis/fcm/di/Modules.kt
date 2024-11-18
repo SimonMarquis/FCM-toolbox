@@ -42,7 +42,7 @@ val firebase = module {
 }
 
 val database = module {
-    single { Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database").build() }
+    single { Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database").fallbackToDestructiveMigration().build() }
     single { get<AppDatabase>().dao() }
 }
 
@@ -57,6 +57,7 @@ val json = module {
                     .withSubtype(Payload.Raw::class.java, "raw")
                     .withSubtype(Payload.Text::class.java, "text"),
             )
+            .add(UriJsonAdapter())
             .add(KotlinJsonAdapterFactory()).build()
     }
     single {

@@ -58,5 +58,6 @@ fun RemoteMessage.asMessage() = Message(
     ttl = ttl,
     priority = originalPriority,
     originalPriority = priority,
+    notification = notification,
     payload = Payload.extract(this),
 )
