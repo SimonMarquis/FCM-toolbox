@@ -18,6 +18,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      - uses: gradle-update/update-gradle-wrapper-action@9268373d69bd0974b6318eb3b512b8e025060bbe # v2.0.0
+      - uses: gradle-update/update-gradle-wrapper-action@9cca748ef7cfd967bc3a5c39e15a7aa229ad1b3d # v2.0.1
         with:
           set-distribution-checksum: false
