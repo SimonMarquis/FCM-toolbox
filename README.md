@@ -17,6 +17,13 @@ Download the latest public version on the [Play Store](https://play.google.com/s
 - Issue a notification for each message
 - Retain all received messages
 
+NOTE:
+If you have an issue with the token not showing in the app, it's possibly because of the DNS on your device (virtual or physical). 
+
+- If you use a virtual device, [set the DNS](https://developer.android.com/studio/run/emulator-networking#dns).
+
+or just simply use your physical device. and make sure you use the right DNS.
+
 ![android_empty](art/android_empty.png) ![android_lis](art/android_list.png) ![android_notifications](art/android_notifications.png)
 
 ### Configuration
