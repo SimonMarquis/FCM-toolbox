@@ -16,7 +16,7 @@ junit = "4.13.2"
 koin = "4.0.4"
 kotlin = "2.1.20"
 kotlinx-coroutines = "1.10.2"
-ksp = "2.1.20-1.0.32"
+ksp = "2.1.20-2.0.0"
 moshi = "1.15.2"
 
 [libraries]
