@@ -38,6 +38,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.core.view.isInvisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -74,6 +77,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(ActivityMainBinding.inflate(layoutInflater).also { binding = it }.root)
 
+        if (intent.action == ACTION_DIAGNOSTICS) {
+            openDiagnostics()
+        }
+
         viewModel.token.observe(this, ::updateToken)
         viewModel.messages.observe(this, ::updateMessages)
         viewModel.presence.observe(this, ::updatePresence)
@@ -106,6 +113,15 @@ class MainActivity : AppCompatActivity() {
                 },
             ).attachToRecyclerView(this)
             adapter = messagesAdapter
+        }
+
+        addDiagnosticsShortcut()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.action == ACTION_DIAGNOSTICS) {
+            openDiagnostics()
         }
     }
 
@@ -232,6 +248,17 @@ class MainActivity : AppCompatActivity() {
         safeStartActivity(intent)
     }
 
+    private fun addDiagnosticsShortcut() {
+        val intent = Intent(this, MainActivity::class.java)
+            .setAction(ACTION_DIAGNOSTICS)
+        val shortcut = ShortcutInfoCompat.Builder(this, "diagnostics")
+            .setShortLabel(getString(R.string.menu_diagnostics))
+            .setIcon(IconCompat.createWithResource(this, R.drawable.ic_diagnostics_24dp))
+            .setIntent(intent)
+            .build()
+        ShortcutManagerCompat.pushDynamicShortcut(this, shortcut)
+    }
+
     private fun Presence?.message() = when (this) {
         Presence.Offline, null -> getString(R.string.presence_offline)
         Presence.Online -> getString(R.string.presence_online)
@@ -260,3 +287,5 @@ class MainActivity : AppCompatActivity() {
         .show()
 
 }
+
+private const val ACTION_DIAGNOSTICS = "fr.smarquis.fcm.action.DIAGNOSTICS"
