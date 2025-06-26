@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_monitor_heart_24"
+        android:shortcutId="diagnostics"
+        android:shortcutShortLabel="@string/menu_diagnostics">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.google.android.gms.gcm.GcmDiagnostics"
+            android:targetPackage="com.google.android.gms" />
+    </shortcut>
+</shortcuts>
