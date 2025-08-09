@@ -22,6 +22,7 @@ import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Color
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION_CODES.TIRAMISU
@@ -31,6 +32,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -38,6 +41,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -71,8 +76,13 @@ class MainActivity : AppCompatActivity() {
     private val requestNotificationsPermission = registerForActivityResult(RequestPermission(), ::onNotificationsPermissionResult)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(getColor(R.color.colorPrimary)),
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+        )
         super.onCreate(savedInstanceState)
         setContentView(ActivityMainBinding.inflate(layoutInflater).also { binding = it }.root)
+        setSupportActionBar(binding.toolbar)
 
         viewModel.token.observe(this, ::updateToken)
         viewModel.messages.observe(this, ::updateMessages)
@@ -106,6 +116,12 @@ class MainActivity : AppCompatActivity() {
                 },
             ).attachToRecyclerView(this)
             adapter = messagesAdapter
+
+            ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.setPadding(0, 0, 0, systemBars.bottom)
+                insets
+            }
         }
     }
 
