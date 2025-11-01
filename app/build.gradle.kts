@@ -28,7 +28,18 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "fcm-toolbox"
+            keyPassword = "fcm-toolbox"
+            storePassword = "fcm-toolbox"
+            storeFile = file("debug-keystore.jks")
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

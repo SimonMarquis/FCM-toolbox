@@ -7,6 +7,8 @@
 
 # Signing keystore
 *.jks
+# but keep the debug keystore
+!app/debug-keystore.jks
 
 # Signing config
 signing.properties
