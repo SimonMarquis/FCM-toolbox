@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.android.kotlin)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.playServices)
 }
