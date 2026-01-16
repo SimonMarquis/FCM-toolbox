@@ -1,5 +1,5 @@
 [versions]
-android-gradlePlugin = "9.0.0"
+agp = "9.0.0"
 androidx-appcompat = "1.7.1"
 androidx-constraintlayout = "2.2.1"
 androidx-core = "1.17.0"
@@ -49,7 +49,7 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
-android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-playServices = { id = "com.google.gms.google-services", version = "4.4.4" }
