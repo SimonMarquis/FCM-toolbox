@@ -15,7 +15,7 @@ google-android-material = "1.13.0"
 junit = "4.13.2"
 koin = "4.1.1"
 kotlinx-coroutines = "1.10.2"
-ksp = "2.3.4"
+ksp = "2.3.5"
 moshi = "1.15.2"
 
 [libraries]
