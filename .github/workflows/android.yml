@@ -20,7 +20,6 @@ jobs:
     - uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5.0.1
       with:
         validate-wrappers: true
-        gradle-home-cache-cleanup: true
     - name: Check
       run: ./gradlew check --stacktrace
     - name: Assemble
