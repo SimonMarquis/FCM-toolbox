@@ -12,6 +12,18 @@ updates:
       interval: "daily"
     registries: "*"
     labels: [ ]
+  - package-ecosystem: npm
+    directory: /firebase/functions
+    schedule:
+      interval: weekly
+    groups:
+      npm-minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
 registries:
   maven-google:
     type: "maven-repository"
