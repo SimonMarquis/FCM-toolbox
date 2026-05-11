@@ -14,7 +14,7 @@ firebase-bom = "34.13.0"
 google-android-material = "1.13.0"
 junit = "4.13.2"
 koin = "4.2.1"
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 ksp = "2.3.7"
 moshi = "1.15.2"
 
