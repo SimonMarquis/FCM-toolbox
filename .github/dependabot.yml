@@ -15,7 +15,7 @@ updates:
   - package-ecosystem: npm
     directory: /firebase/functions
     schedule:
-      interval: weekly
+      interval: monthly
     groups:
       npm-minor-and-patch:
         applies-to: version-updates
