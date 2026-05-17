@@ -15,7 +15,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with: 
-          app-id: ${{ vars.BOT_APP_ID }}
+          client-id: ${{ vars.BOT_CLIENT_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - if: contains(fromJSON('["version-update:semver-minor", "version-update:semver-patch"]'), steps.metadata.outputs.update-type)
         run: gh pr merge --auto --merge "$PR_URL"
