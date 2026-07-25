@@ -15,8 +15,8 @@ jobs:
     - uses: actions/checkout@v7
     - uses: actions/setup-java@v5
       with:
-        java-version: 17
-        distribution: 'temurin'
+        java-version: 25
+        distribution: temurin
     - uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
       with:
         validate-wrappers: true
