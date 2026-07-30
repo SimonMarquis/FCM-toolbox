@@ -1,7 +1,7 @@
 [versions]
 agp = "9.3.1"
 androidx-appcompat = "1.7.1"
-androidx-constraintlayout = "2.2.1"
+androidx-constraintlayout = "2.2.2"
 androidx-core = "1.19.0"
 androidx-lifecycle = "2.11.0"
 androidx-preference = "1.2.1"
