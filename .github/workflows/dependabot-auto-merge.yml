@@ -12,7 +12,7 @@ jobs:
     steps:
       - id: metadata
         uses: dependabot/fetch-metadata@v3
-      - uses: actions/create-github-app-token@v3
+      - uses: SimonMarquis/setup-github-app-as-bot@v1
         id: app-token
         with: 
           client-id: ${{ vars.BOT_CLIENT_ID }}
