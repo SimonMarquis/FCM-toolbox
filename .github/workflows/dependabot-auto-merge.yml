@@ -2,7 +2,8 @@ name: 🤖 Dependabot auto-merge
 on: pull_request
 
 permissions:
-  pull-requests: write
+  contents: read
+  pull-requests: read
 
 jobs:
   dependabot:
