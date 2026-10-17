@@ -17,6 +17,7 @@ jobs:
         with: 
           client-id: ${{ vars.BOT_CLIENT_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          permission-pull-requests: write
       - if: contains(fromJSON('["version-update:semver-minor", "version-update:semver-patch"]'), steps.metadata.outputs.update-type)
         run: gh pr merge --auto --merge "$PR_URL"
         env:
